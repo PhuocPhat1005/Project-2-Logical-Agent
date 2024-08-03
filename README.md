@@ -56,7 +56,7 @@ Our Wumpus World for actual implementation slightly differs from the original pr
 	* When the <font style='color:blue'>**Wumpus dies**</font>. It will <font style='color:blue'>**scream**</font> and you will know this information.
 	* After Wumpus dies, the <font style='color:blue'>**stench of that Wumpus**</font> will <font style='color:blue'>**disappear**</font> (you should update the state of map after Wumpus dies)
 		* The game will end when one of the following <font style='color:blue'>**two**</font> conditions occurs:
-			* The agent dies (by wumpus, pit or 0% of health).
+			* The agent dies **(by wumpus, pit or 0% of health)**.
 			* The agent climbs out of the cave **(exit the cave)**.
 
 The following activities can give the agent certain amounts of points.
@@ -81,7 +81,7 @@ You need to create 2 classes Program and Agent in separate files.
 **Input**: the given map is represented by matrix, which is stored in the input file, for example, map1.txt.
 The input file format is described as follows:
 * The first line contains an integer N, which is the size of map.
-* N next lines with each line represents a string. If room empty, it is marked by hyphen character (-). If room has some things or signal such as Wumpus(W), Pit(P), Breeze(B), Stench(S), Agent(A) or Gold(G). Between two adjacent rooms is separated by a dot (.)
+* N next lines with each line represents a string. If room empty, it is marked by hyphen character (-). If room has some things or signal such as Wumpus(W), Pit( P ), Breeze(B), Stench(S), Agent(A) or Gold(G). Between two adjacent rooms is separated by a dot (.)
 * <font style='color:red'>**Input only includes Wumpus(W), Pit(P), Agent(A) and Gold(G)**</font>, **Poisonous Gas(P_G),Healing Potions(H_P)**. <font style='color:red'>**You need to update information about Stench(S), Breeze(B),**</font> **Whiff(W) and Glow(G_L)** <font style='color:red'>**on the map based on input data**</font>.
 * For example:
 	```tex
@@ -97,7 +97,7 @@ The agent can **only know the components of the cell where it is standing**. The
 **Result**: a result with path for agent, game point will be displayed on screen and written in output text file such as result1.txt.
 
 You can write output in the following format:
-![image](https://hackmd.io/_uploads/SkXh9yhF0.png)
+![image](https://github.com/user-attachments/assets/73201aef-644f-4748-8f10-605675603e52)
 
 ## 5. Requirements
 | No. | Specifications                                                                                                                  |  Scores   |
@@ -116,4 +116,24 @@ This assignment will be completed in <font style='color:blue' >**groups**</font>
 * References (if any)
 
 <font style='color:red'>**Any plagiarism, tricks, or any lie will have 0 points for the course grade.**</font>
+
+---
+# TEAM'S INFORMATION
+## 1. Work assignment table
+
+| Student ID | Full Name       |   General Tasks    | Detailed Tasks | Completion |
+|:----------:| --------------- |:------------------:|:--------------:|:----------:|
+|  22127174  | Ngô Văn Khải    |        GUI         |                |   100 %    |
+|  22127322  | Lê Phước Phát   | Problem/Test Cases |                |   100 %    |
+|  22127388  | Tô Quốc Thanh   |      Problem       |                |   100 %    |
+|  22127441  | Thái Huyễn Tùng |        GUI         |                |   100 %    |
+
+## 2. Self-evaluation of the completion rate
+
+| No. | Details                                                       | Completion Rate |
+|:---:| ------------------------------------------------------------- |:---------------:|
+|  1  | Finish problem successfully                                   |      100 %      |
+|  2  | GUI                                                           |      100 %      |
+|  3  | Generate at least 5 test cases                                |      100 %      |
+|  4  | Report algorithm, experiment with some reflection or comments |      100 %      |
 
