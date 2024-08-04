@@ -93,9 +93,13 @@ The input file format is described as follows:
 	![89dc203e-6400-4830-baf5-2460433359bb](https://github.com/user-attachments/assets/c3267c64-cc85-4a58-aede-501b0447753b)
 
 **Output**: The map with all infomation
+
 <font style='color:red'>**Class Agent**</font>
+
 The agent can **only know the components of the cell where it is standing**. The agent must **go step by step** and call the program to get information about the cell it is standing on **from class program**. From there, it makes percepts to find the direction of movement and infer objects based on the available information.
+
 <font style='color:red'>**NOTE:** The agent does not know the information on the whole map.</font>
+
 **Result**: a result with path for agent, game point will be displayed on screen and written in output text file such as result1.txt.
 
 You can write output in the following format:
