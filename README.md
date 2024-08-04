@@ -77,7 +77,9 @@ Your implementation should <font style='color:blue'>*output information about th
 Having your implementation generate worlds randomly can help you test your agent.
 ## 4. Specifications
 You need to create 2 classes Program and Agent in separate files.
+
 <font style='color:red'>**For class Program**</font>: This class is responsible for building the map, and reporting information about the elements in the cell.
+
 **Input**: the given map is represented by matrix, which is stored in the input file, for example, map1.txt.
 The input file format is described as follows:
 * The first line contains an integer N, which is the size of map.
