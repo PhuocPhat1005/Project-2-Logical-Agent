@@ -33,7 +33,7 @@ class ChoiceList:
     def __init__(self, screen):
         self.screen = screen
         
-    def choose_options(self, choice_list, is_up, is_down, letter_spacing=WINDOW_HEIGHT):
+    def choose_options(self, choice_list, is_up, is_down, letter_spacing=100):
         min_arrow_pox_x = 10e5
         current_index_active = None
         
@@ -115,21 +115,28 @@ class Choice:
         self.option_result = None
         return res
     
-    def display_menu(self, is_up, is_down, is_enter):
+    def display_option(self, is_up, is_down, is_left, is_enter):
         self.screen.blit(self.background, (0, 0))
+        height=100
+        if self.title_obj != '':
+            title_obj = Text_Display(self.title_obj, font_size=FONT_LARGE)
+            title = title_obj.show_text()
+            title_pos = title_obj.center_text(height=height)
+            self.screen.blit(title, title_pos)
+            height = WINDOW_HEIGHT
         
-        title_obj = Text_Display('Logical Agent - Wumpus World', font_size=FONT_LARGE)
-        title = title_obj.show_text()
-        title_pos = title_obj.center_text(height=100)
-        
-        self.screen.blit(title, title_pos)
-        
+        if self.title_obj == '':
+            back_button = BackButton(self.screen)
+            if is_left:
+                is_left = False
+                self.is_click_back = True
+                self.option_back_to = back_button.back_to(self.is_click_back, None, 0)
         if is_enter:
             is_enter = False
             self.option_result = self.get_choice()
         
         choice_list = ChoiceList(self.screen)
-        choice_list.choose_options(self.choice_list, is_up, is_down)
+        choice_list.choose_options(self.choice_list, is_up, is_down, height)
         
     def show_choice_list(self, is_up, is_down, is_left, is_enter):
         self.screen.fill(BACKGROUND_COLOR)

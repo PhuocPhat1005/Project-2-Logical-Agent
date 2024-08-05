@@ -1,10 +1,11 @@
 import pygame
 from constants import *
+from image import showGameBackground
 
 # https://www.geeksforgeeks.org/python-display-text-to-pygame-window/
 
 class Text_Display:
-    def __init__(self, content, font_type=FONT_TYPE, font_size=FONT_MEDIUM, text_color=WHITE_COLOR):
+    def __init__(self, content='', font_type=FONT_TYPE, font_size=FONT_MEDIUM, text_color=WHITE_COLOR):
         self.content = content
         self.font_type = font_type
         self.font_size = font_size
@@ -34,4 +35,24 @@ class Text_Display:
             text_pos = text_obj.center_text(width, height)
         self.screen.blit(text_content, text_pos)
         
-        
+
+class Info(Text_Display):
+    def __init__(self, screen):
+        super().__init__()
+        self.screen = screen
+        self.left_margin = 900
+    
+    def reShowInfo(self):
+        area = (self.left_margin, 0, WINDOW_WIDTH-self.left_margin, WINDOW_HEIGHT)
+        showGameBackground(self.screen, area)
+    
+    def showInputInfo(self, choose_input_result):
+        self.write_text_content(f"Input 0{choose_input_result+1}", self.left_margin, 50)
+    
+    def showPoint(self, point=0):
+        self.write_text_content(f"Point: {point}", self.left_margin, 200)
+    
+    def showNoti(self):
+        self.write_text_content(f"Press Enter to blabla", BOARD_APPEEAR_WIDTH, 600)
+    
+    #def showFull()
