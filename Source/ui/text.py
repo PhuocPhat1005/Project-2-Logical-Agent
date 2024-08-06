@@ -40,7 +40,7 @@ class Info(Text_Display):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
-        self.left_margin = 930
+        self.left_margin = 900
     
     def reShowInfo(self):
         area = (self.left_margin, 0, WINDOW_WIDTH-self.left_margin, WINDOW_HEIGHT)

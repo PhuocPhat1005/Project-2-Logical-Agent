@@ -16,6 +16,8 @@ def showWumpusWorld(choose_input_result, map):
     M1.showBoard()
     I1 = Info(screen)
     I1.showInputInfo(choose_input_result)
+    I1.showPoint()
+    I1.showHP()
     I1.showNoti()
     while True:
         for event in pygame.event.get():
@@ -85,10 +87,16 @@ def showMenu():
 # [ Empty False False False False ] [ Empty False False False False ] [ Empty False True False False ] [ ['P'] False False False False ]
 def mainUI():
     choose_input_result = showMenu()
-    map = [ [ [ 'A', True, False, False, False ], [ 'W', False, False, False, False ], [ '-', True, True, False, False ], [ '-', False, False, False, False ] ],
-            [ [ '-', False, False, False, False ], [ 'G', True, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ] ],
-            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, True, False, False ] ],
-            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ 'P', False, False, False, False ] ] ]
+    map = [ [ [ 'A', True, False, False, False ], [ 'W', False, False, False, False ], [ '-', True, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ 'G', True, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ 'G', True, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ 'G', True, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ],
+            [ [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, True, False, False ], [ 'P', False, False, False, False ], [ '-', False, True, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ], [ '-', False, False, False, False ] ] ]
     showWumpusWorld(choose_input_result, map)
 
 while True:
