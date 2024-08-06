@@ -40,7 +40,7 @@ class Info(Text_Display):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
-        self.left_margin = 900
+        self.left_margin = 930
     
     def reShowInfo(self):
         area = (self.left_margin, 0, WINDOW_WIDTH-self.left_margin, WINDOW_HEIGHT)
@@ -51,8 +51,10 @@ class Info(Text_Display):
     
     def showPoint(self, point=0):
         self.write_text_content(f"Point: {point}", self.left_margin, 200)
+    def showHP(self, HP=100):
+        self.write_text_content(f"HP: {HP}%", self.left_margin, 300)
     
     def showNoti(self):
-        self.write_text_content(f"Press Enter to blabla", BOARD_APPEEAR_WIDTH, 600)
+        self.write_text_content(f"Press Enter to blabla", BOARD_APPEEAR_WIDTH, SHOW_NOTI)
     
     #def showFull()
