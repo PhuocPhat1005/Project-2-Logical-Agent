@@ -6,7 +6,10 @@ def showGameBackground(screen, area=None):
     #area: (pos_x, pos_y, width, height)
     background = pygame.image.load('ui/assets/game_background.jpg')
     background = pygame.transform.scale(background, (WINDOW_WIDTH, WINDOW_HEIGHT))
-    screen.blit(background, (0, 0), area)
+    if area == None:
+        screen.blit(background, (0, 0))
+    else:
+        screen.blit(background, (area[0], area[1]), area)
 
 def showMenuBackground(screen):
     #https://wallpapersafari.com/w/nLIPZf/download
@@ -21,6 +24,8 @@ class ImageElement:
         self.cell_size = (self.cell_side, self.cell_side)
         self.empty_img = pygame.image.load('ui/assets/empty.png')
         self.empty_img = pygame.transform.scale(self.empty_img, self.cell_size)
+        self.unknown_img = pygame.image.load('ui/assets/unknown.png')
+        self.unknown_img = pygame.transform.scale(self.unknown_img, self.cell_size)
         #https://www.clipartmax.com/download/m2i8A0H7b1Z5d3Z5_miner-miner-png/
         self.agent_img = pygame.image.load('ui/assets/agent.png')
         self.agent_img = pygame.transform.scale(self.agent_img, self.cell_size)
@@ -106,17 +111,17 @@ class Map(ImageElement):
         for i in range (0, self.h):
             for j in range (0, self.w):
                 self.showEmpty(i, j)
-                if self.map_data[i][j][0] == 'A':
+                if 'A' in self.map_data[i][j][0]:
                     self.showAgent(i, j)
-                if self.map_data[i][j][0] == 'G':
+                if 'G' in self.map_data[i][j][0]:
                     self.showGold(i, j)
-                if self.map_data[i][j][0] == 'W':
+                if 'W' in self.map_data[i][j][0]:
                     self.showWumpus(i, j)
-                if self.map_data[i][j][0] == 'P':
+                if 'P' in self.map_data[i][j][0]:
                     self.showPit(i, j)
-                if self.map_data[i][j][0] == 'P_G':
+                if 'P_G' in self.map_data[i][j][0]:
                     self.showPoisonousGas(i, j)
-                if self.map_data[i][j][0] == 'H_P':
+                if 'H_P' in self.map_data[i][j][0]:
                     self.showHealingPotion(i, j)
                 
                 if self.map_data[i][j][1]:
