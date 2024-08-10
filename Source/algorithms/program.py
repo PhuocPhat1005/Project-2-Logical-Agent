@@ -1,5 +1,3 @@
-from pysat.solvers import Solver
-from pysat.formula import CNF
 from algorithms.cell import Cell
 
 
@@ -39,7 +37,7 @@ class Program:
             for _ in range(self.map_size):
                 line = file.readline().strip()
                 # Split the line by '.' to get rooms, then split each room by ','
-                row = [cell.split(",") for cell in line.split(".")]
+                row = [cell.split(",") for cell in line.split(".")]  # Parse each row
                 self.tmp_map.append(
                     row
                 )  # Append the processed row to the temporary map
@@ -58,7 +56,7 @@ class Program:
         # Mark the starting position (0,0) as safe and set the initial direction to "right"
         self.tmp_map[0][0] = "A"
         self.cells[0][0].safe = True
-        self.cells[0][0].direction = "right"
+        self.cells[0][0].direction = "up"
 
         self.update_map_info()  # Update the map with stench, breeze, whiff, and glow
 
@@ -114,19 +112,19 @@ class Program:
         for dy, dx in directions:
             nx, ny = x + dx, y + dy
             if 0 <= nx <= self.map_size - 1 and 0 <= ny <= self.map_size - 1:
-                if element == "Wumpus":
+                if element == "W":
                     self.cells[ny][
                         nx
                     ].remove_stench()  # Remove stench if Wumpus is removed
-                elif element == "Pit":
+                elif element == "P":
                     self.cells[ny][
                         nx
                     ].remove_breeze()  # Remove breeze if Pit is removed
-                elif element == "Poisonous Gas":
+                elif element == "P_G":
                     self.cells[ny][
                         nx
                     ].remove_whiff()  # Remove whiff if Poisonous Gas is removed
-                elif element == "Healing Potions":
+                elif element == "H_P":
                     self.cells[ny][
                         nx
                     ].remove_glow()  # Remove glow if Healing Potion is removed
@@ -142,7 +140,7 @@ class Program:
             y (int): The y-coordinate of the Wumpus cell.
             x (int): The x-coordinate of the Wumpus cell.
         """
-        self.add_to_adjacent(y, x, "Wumpus")  # Add stench to adjacent cells
+        self.add_to_adjacent(y, x, "W")  # Add stench to adjacent cells
 
     def add_breeze(self, y, x):
         """
@@ -152,7 +150,7 @@ class Program:
             y (int): The y-coordinate of the Pit cell.
             x (int): The x-coordinate of the Pit cell.
         """
-        self.add_to_adjacent(y, x, "Pit")  # Add breeze to adjacent cells
+        self.add_to_adjacent(y, x, "P")  # Add breeze to adjacent cells
 
     def add_whiff(self, y, x):
         """
@@ -162,7 +160,7 @@ class Program:
             y (int): The y-coordinate of the Poisonous Gas cell.
             x (int): The x-coordinate of the Poisonous Gas cell.
         """
-        self.add_to_adjacent(y, x, "Poisonous Gas")  # Add whiff to adjacent cells
+        self.add_to_adjacent(y, x, "P_G")  # Add whiff to adjacent cells
 
     def add_glow(self, y, x):
         """
@@ -172,7 +170,7 @@ class Program:
             y (int): The y-coordinate of the Healing Potions cell.
             x (int): The x-coordinate of the Healing Potions cell.
         """
-        self.add_to_adjacent(y, x, "Healing Potions")  # Add glow to adjacent cells
+        self.add_to_adjacent(y, x, "H_P")  # Add glow to adjacent cells
 
     def add_to_adjacent(self, y, x, object_name):
         """
@@ -193,13 +191,13 @@ class Program:
             nx, ny = x + dx, y + dy  # Calculate the new coordinates
             if 0 <= nx <= self.map_size - 1 and 0 <= ny <= self.map_size - 1:
                 # Add the corresponding effect to the adjacent cell
-                if object_name == "Wumpus":
+                if object_name == "W":
                     self.cells[ny][nx].set_stench()  # Add stench
-                elif object_name == "Pit":
+                elif object_name == "P":
                     self.cells[ny][nx].set_breeze()  # Add breeze
-                elif object_name == "Poisonous Gas":
+                elif object_name == "P_G":
                     self.cells[ny][nx].set_whiff()  # Add whiff
-                elif object_name == "Healing Potions":
+                elif object_name == "H_P":
                     self.cells[ny][nx].set_glow()  # Add glow
 
     def display_map_test(self):
