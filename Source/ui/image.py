@@ -61,6 +61,8 @@ class ImageElement:
     # Show images
     def showEmpty(self, i, j):
         self.screen.blit(self.empty_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side))
+    def showUnknown(self, i, j):
+        self.screen.blit(self.unknown_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side))
     def showAgent(self, i, j):
         self.screen.blit(self.agent_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side))
     def showGold(self, i, j):
@@ -104,7 +106,14 @@ class Map(ImageElement):
     def returnCellSide(self):
         return self.cell_side
     
-    def showBoard(self): # Show game board
+    def showUnknownBoard(self): # Show game board
+        i = 0
+        j = 0
+        for i in range (0, self.h):
+            for j in range (0, self.w):
+                self.showUnknown(i, j)
+    
+    def showPath(self): # Show agent move
         i = 0
         j = 0
         #[element, stench, breeze, whiff, glow]
