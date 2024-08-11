@@ -16,16 +16,12 @@ class Object(Enum):
     SCREAM = "S_C"  # heard if the Wumpus is killed.
 
 
+# Enum for Actions the agent can perform
 class Action(Enum):
-    MOVE_FORWARD = auto()
-    TURN_LEFT = auto()
-    TURN_RIGHT = auto()
-    GRAB = auto()
-    SHOOT = auto()
-    CLIMB = auto()
-    HEAL = auto()
-
-
-class GameState(Enum):
-    RUNNING = 1
-    NOT_RUNNING = 2
+    MOVE_FORWARD = "move_forward"
+    TURN_LEFT = "turn_left"
+    TURN_RIGHT = "turn_right"
+    GRAB = "grab"
+    SHOOT = "shoot"
+    CLIMB = "climb"
+    HEAL = "heal"
