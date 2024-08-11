@@ -4,7 +4,7 @@ from utils.test import WumpusWorldUI
 
 
 def main():
-    program = Program(file_path="input/map1.txt")
+    program = Program(file_path="input/map3.txt")
     agent = Agent(map_size=program.map_size)
 
     ui = WumpusWorldUI(program, agent)

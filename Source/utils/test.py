@@ -83,7 +83,7 @@ class WumpusWorldUI:
         self.actions.append(f"({y + 1},{x + 1}): {action}")  # Append action to the log
         self.path.append((y + 1, x + 1))  # Record the agent's position in the path
 
-    def save_result(self, file_name="output/result1.txt"):
+    def save_result(self, file_name="output/result2.txt"):
         """
         Saves the result of the game to a specified file.
 

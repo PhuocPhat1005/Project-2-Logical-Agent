@@ -26,7 +26,7 @@ class Agent:
             Directions.UP
         )  # Initialize with UP direction => set up huong dau tien cua agent la huong len.
 
-        # Initial safe position (0, 0)
+        # Vị trí an toàn ban đầu (0, 0)
         self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.PIT)])
         self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.WUMPUS)])
         self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.HEALING_POTIONS)])
@@ -87,35 +87,35 @@ class Agent:
         neighbors = self.get_adjacent_cells(self.y, self.x)  # Get neighboring cells
         self.update_safe_cells(neighbors)  # Update the safe cells set
 
-    # Method to add observations about a cell's properties
+    # Phương thức thêm các quan sát về thuộc tính của một ô
     def add_observation(self, y, x, cell):
         adj_cells = self.get_adjacent_cells(y, x)
-        for ay, ax in adj_cells:
-            if not cell.is_safe:  # If the current cell is not safe
-                if (
-                    cell.is_breeze
-                ):  # If there's a breeze, infer the presence of a Pit in adjacent cells
-                    self.knowledge_base.add_clause(
-                        [self.pos_literal(ay, ax, Object.PIT)]
-                    )
-                if (
-                    cell.is_stench
-                ):  # If there's a stench, infer the presence of a Wumpus in adjacent cells
-                    self.knowledge_base.add_clause(
-                        [self.pos_literal(ay, ax, Object.WUMPUS)]
-                    )
-                if (
-                    cell.is_whiff
-                ):  # If there's a whiff, infer the presence of Poisonous Gas in adjacent cells
-                    self.knowledge_base.add_clause(
-                        [self.pos_literal(ay, ax, Object.POISONOUS_GAS)]
-                    )
-                if (
-                    cell.is_glow
-                ):  # If there's a glow, infer the presence of Healing Potions in adjacent cells
-                    self.knowledge_base.add_clause(
-                        [self.pos_literal(ay, ax, Object.HEALING_POTIONS)]
-                    )
+
+        # Nếu có gió nhẹ, suy luận rằng có hố ở các ô liền kề
+        if cell.is_breeze:
+            for ay, ax in adj_cells:
+                self.knowledge_base.add_clause([self.pos_literal(ay, ax, Object.PIT)])
+
+        # Nếu có mùi hôi, suy luận rằng có Wumpus ở các ô liền kề
+        if cell.is_stench:
+            for ay, ax in adj_cells:
+                self.knowledge_base.add_clause(
+                    [self.pos_literal(ay, ax, Object.WUMPUS)]
+                )
+
+        # Nếu có mùi khí độc, suy luận rằng có khí độc ở các ô liền kề
+        if cell.is_whiff:
+            for ay, ax in adj_cells:
+                self.knowledge_base.add_clause(
+                    [self.pos_literal(ay, ax, Object.POISONOUS_GAS)]
+                )
+
+        # Nếu có ánh sáng, suy luận rằng có bình chữa bệnh ở các ô liền kề
+        if cell.is_glow:
+            for ay, ax in adj_cells:
+                self.knowledge_base.add_clause(
+                    [self.pos_literal(ay, ax, Object.HEALING_POTIONS)]
+                )
 
     # Method to update the set of safe cells based on the knowledge base
     def update_safe_cells(self, neighbors):
@@ -197,11 +197,13 @@ class Agent:
     # Method to turn the agent left
     def turn_left(self):
         self.direction = Directions.turn_left(self.direction)
+        print("Turn left: ", self.direction)
         self.point -= 10
 
     # Method to turn the agent right
     def turn_right(self):
         self.direction = Directions.turn_right(self.direction)
+        print("Turn right: ", self.direction)
         self.point -= 10
 
     # Method to grab gold or healing potions in the current cell
@@ -239,25 +241,29 @@ class Agent:
                     Object.WUMPUS
                 )  # Remove Wumpus
                 self.killing_wumpus = True  # Mark the Wumpus as killed
-                self.point += 1000  # Add points for killing the Wumpus
                 # Add a clause to the knowledge base that the Wumpus is dead
                 self.knowledge_base.add_clause(
-                    [self.neg_literal(arrow_y, arrow_x, "W")]
+                    [self.neg_literal(arrow_y, arrow_x, Object.WUMPUS)]
                 )
+                print(f"Wumpus killed at ({arrow_y}, {arrow_x})")
                 break
             arrow_x += dx
             arrow_y += dy
+        self.point -= 10
+        print("Arrow shoot !!!")
 
     # Method to climb out of the cave and end the game if the agent has gold.
     def climb(self):
         if (
-            self.x == 0 and self.y == 0 and self.has_gold
+            self.x == 0 and self.y == 0
         ):  # Check if the agent is at the starting position with the gold.
             self.point += 10
             print(
                 f"Agent exits the cave with {self.point} points."
             )  # print the final score.
             self.is_alive = False  # mark the agent as no longer active (GAME OVER)
+        else:
+            print("You can only climb out at the starting position (0,0) !!!")
 
     # Method to heal the agent if it has a healing potion
     def heal(self):
@@ -267,6 +273,9 @@ class Agent:
             )  # Restore the health points, up to a maximum of 100.
             self.healing_potion -= 1  # decrease the number of healing potions
             self.point -= 10  # deduct points for using a healing potion
+            print("Agent healed !!!")
+        else:
+            print("No healing potion available !!!")
 
     # DFS method to explore the map based on current knowledge
 
@@ -330,11 +339,8 @@ class Agent:
         """Handle perceived dangers and update the knowledge base accordingly."""
         cell = program.cells[ny][nx]  # Get the cell at the given position
         if self.check_Wumpus(ny, nx):  # Check if there's a Wumpus in the cells
-            self.point -= 100  # Deduct points for encountering a Wumpus
-            self.action.append(
-                (Action.SHOOT, (ny, nx))
-            )  # Add the shoot action to the agent's actions
-            self.point -= 100  # Deduct points for shooting
+            self.point -= 10000  # Deduct points for encountering a Wumpus
+            self.shoot((ny, nx), program)
             if Object.WUMPUS in cell.element:  # If the Wumpus is present in the cell
                 cell.set_scream()  # Set scream in the cell where Wumpus is shot
                 self.update_map_after_wumpus_killed(
@@ -344,25 +350,17 @@ class Agent:
             ny, nx
         ):  # Check if there's Poisonous Gas in the cell
             self.current_hp -= 0.25 * self.current_hp  # Reduce health points by 25%
-            if (
-                self.current_hp <= 0 and self.healing_potion > 0
-            ):  # If health points drop to 0 and there are healing potions
-                self.healing_potion -= 1  # Use a healing potion
-                self.current_hp = 0.25 * self.current_hp  # Restore 25% of health points
-        if self.check_Healing_Potions(
-            ny, nx
-        ):  # Check if there are Healing Potions in the cell
-            self.healing_potion += 1  # Increase the number of healing potions
-            self.point += 10
+        if self.check_Healing_Potions(ny, nx):
+            self.grab(program)
 
     # Method to update the map after killing a Wumpus
     def update_map_after_wumpus_killed(self, y, x, program):
         adj_cells = self.get_adjacent_cells(y, x)  # Get adjacent cells of the Wumpus
         for ay, ax in adj_cells:
             if (
-                "S" in program.cells[ay][ax].element
+                Object.STENCH in program.cells[ay][ax].element
             ):  # If stench is present in adjacent cells
-                program.cells[ay][ax].element.remove("S")
+                program.cells[ay][ax].element.remove(Object.STENCH)
 
     # Helper method to return to the starting position after exploration
     def return_to_start(self, path):
