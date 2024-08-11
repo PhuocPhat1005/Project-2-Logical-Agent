@@ -1,7 +1,6 @@
 from algorithms.knowledge_base import KnowledgeBase
-from utils.util import Action
+from utils.util import Action, Object
 from algorithms.directions import Directions
-from algorithms.program import Program
 
 
 # Agent class definition
@@ -28,7 +27,10 @@ class Agent:
         )  # Initialize with UP direction => set up huong dau tien cua agent la huong len.
 
         # Initial safe position (0, 0)
-        self.knowledge_base.add_clause([self.pos_literal(0, 0, "SAFE")])
+        self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.PIT)])
+        self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.WUMPUS)])
+        self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.HEALING_POTIONS)])
+        self.knowledge_base.add_clause([self.neg_literal(0, 0, Object.POISONOUS_GAS)])
         self.safe_cells.add((0, 0))  # luon set up cell (0, 0) luon an toan
         self.explored_cells.add((0, 0))  # add cell(0,0) into the explored set
 
@@ -44,15 +46,15 @@ class Agent:
     def encode(self, y, x, prop):
         # Mapping of property names to unique offsets
         prop_offset = {
-            "B": 1,
-            "S": 2,
-            "W_H": 3,
-            "G_L": 4,
-            "S_C": 5,
-            "P": 6,
-            "W": 7,
-            "P_G": 8,
-            "H_P": 9,
+            Object.BREEZE: 1,  # breeze
+            Object.STENCH: 2,  # stench
+            Object.WHIFF: 3,  # whiff
+            Object.GLOW: 4,  # glow
+            Object.SCREAM: 5,  # scream
+            Object.PIT: 6,  # pit
+            Object.WUMPUS: 7,  # wumpus
+            Object.POISONOUS_GAS: 8,  # poisonous gas
+            Object.HEALING_POTIONS: 9,  # healing potion
         }
         # Encoding based on x, y, and property offset
         return (
@@ -93,19 +95,27 @@ class Agent:
                 if (
                     cell.is_breeze
                 ):  # If there's a breeze, infer the presence of a Pit in adjacent cells
-                    self.knowledge_base.add_clause([self.pos_literal(ay, ax, "P")])
+                    self.knowledge_base.add_clause(
+                        [self.pos_literal(ay, ax, Object.PIT)]
+                    )
                 if (
                     cell.is_stench
                 ):  # If there's a stench, infer the presence of a Wumpus in adjacent cells
-                    self.knowledge_base.add_clause([self.pos_literal(ay, ax, "W")])
+                    self.knowledge_base.add_clause(
+                        [self.pos_literal(ay, ax, Object.WUMPUS)]
+                    )
                 if (
                     cell.is_whiff
                 ):  # If there's a whiff, infer the presence of Poisonous Gas in adjacent cells
-                    self.knowledge_base.add_clause([self.pos_literal(ay, ax, "P_G")])
+                    self.knowledge_base.add_clause(
+                        [self.pos_literal(ay, ax, Object.POISONOUS_GAS)]
+                    )
                 if (
                     cell.is_glow
                 ):  # If there's a glow, infer the presence of Healing Potions in adjacent cells
-                    self.knowledge_base.add_clause([self.pos_literal(ay, ax, "H_P")])
+                    self.knowledge_base.add_clause(
+                        [self.pos_literal(ay, ax, Object.HEALING_POTIONS)]
+                    )
 
     # Method to update the set of safe cells based on the knowledge base
     def update_safe_cells(self, neighbors):
@@ -126,50 +136,63 @@ class Agent:
 
     # Method to check if a cell contains a Pit using the knowledge base
     def check_Pit(self, y, x):
-        clause = [self.neg_literal(y, x, "P")]  # Check for absence of Pit
+        clause = [self.neg_literal(y, x, Object.PIT)]  # Check for absence of Pit
         return not self.knowledge_base.infer(clause)
 
     # Method to check if a cell contains a Wumpus using the knowledge base
     def check_Wumpus(self, y, x):
-        clause = [self.neg_literal(y, x, "W")]
+        clause = [self.neg_literal(y, x, Object.WUMPUS)]
         return not self.knowledge_base.infer(clause)
 
     # Method to check if a cell contains Poisonous Gas using the knowledge base
     def check_Poisonous_Gas(self, y, x):
-        clause = [self.neg_literal(y, x, "P_G")]
+        clause = [self.neg_literal(y, x, Object.POISONOUS_GAS)]
         return not self.knowledge_base.infer(clause)
 
     # Method to check if a cell contains Healing Potions using the knowledge base
     def check_Healing_Potions(self, y, x):
-        clause = [self.neg_literal(y, x, "H_P")]
+        clause = [self.neg_literal(y, x, Object.HEALING_POTIONS)]
         return not self.knowledge_base.infer(clause)
 
     # Method to perform an action based on the agent's decision
     def perform_action(self, action, program, target=None):
         if action == Action.MOVE_FORWARD:
-            self.move_forward(program)
+            if self.move_forward(program):
+                return True
         elif action == Action.TURN_LEFT:
             self.turn_left()
+            return True
         elif action == Action.TURN_RIGHT:
             self.turn_right()
+            return True
         elif action == Action.GRAB:
             self.grab(program)
+            return True
         elif action == Action.SHOOT:
             self.shoot(target, program)
+            return True
         elif action == Action.CLIMB:
             self.climb()
+            return True
         elif action == Action.HEAL:
             self.heal()
+            return True
+        return False
 
     # Method to move the agent forward in the current direction
     def move_forward(self, program):
         dx, dy = Directions.get_movement_vector(self.direction)
         new_x, new_y = self.x + dx, self.y + dy
         if 0 <= new_x < self.map_size and 0 <= new_y < self.map_size:
-            self.x, self.y = new_x, new_y
-            self.point -= 10
-            self.explored_cells.add((self.y, self.x))
-            self.perceive_current_cell(program)
+            if (new_y, new_x) in self.safe_cells:
+                self.x, self.y = new_x, new_y
+                self.point -= 10
+                self.explored_cells.add((self.y, self.x))
+                self.perceive_current_cell(program)
+                return True
+            else:
+                print("Cannot move to an unsafe cell!")
+        return False
 
     # Method to turn the agent left
     def turn_left(self):
@@ -184,28 +207,46 @@ class Agent:
     # Method to grab gold or healing potions in the current cell
     def grab(self, program):
         cell = program.cells[self.y][self.x]
-        if "G" in cell.element:  # Check if gold ("G") is in the current cell
+        if Object.GOLD in cell.element:  # Check if gold ("G") is in the current cell
             self.has_gold = True  # Mark the gold as grabbed
             self.point += 5000  # add points for grabbing gold
+            cell.element.remove(Object.GOLD)
+            print(f"Gold grabbed at ({self.y}, {self.x})")
         if (
-            "H_P" in cell.element
+            Object.HEALING_POTIONS in cell.element
         ):  # check if the healing potion ("H_P") is in the current cell
             self.healing_potion += 1  # Update the number of healing potion
-            cell.element.remove("H_P")  # Remove the healing potion from the cell
+            cell.element.remove(
+                Object.HEALING_POTIONS
+            )  # Remove the healing potion from the cell
             self.point -= 10  # deduct points for grabbing healing potion
+            cell.remove_glow()
+            print(f"Healing potion grabbed at ({self.y}, {self.x}) !!!")
+        else:
+            print("Nothing to grab here !!!")
 
     # Method to shoot an arrow at a target cell
     def shoot(self, target, program):
-        self.point -= 100  # deduct points for a shooting
-        if self.check_Wumpus(
-            target[0], target[1]
-        ):  # Check if there's a Wumpus at the target cell.
-            program.cells[target[0]][
-                target[1]
-            ].set_scream()  # Set the scream in the cell where Wumpus is shot
-            self.update_map_after_wumpus_killed(
-                target[0], target[1], program
-            )  # update map after Wumpus is killed.
+        dx, dy = Directions.get_movement_vector(self.direction)
+        arrow_x, arrow_y = self.x + dx, self.y + dy
+
+        # Loop to move the arrow until it hits a wall or target
+        while 0 <= arrow_x < self.map_size and 0 <= arrow_y < self.map_size:
+            if (
+                Object.WUMPUS in program.cells[arrow_y][arrow_x].element
+            ):  # If arrow hits the Wumpus
+                program.cells[arrow_y][arrow_x].element.remove(
+                    Object.WUMPUS
+                )  # Remove Wumpus
+                self.killing_wumpus = True  # Mark the Wumpus as killed
+                self.point += 1000  # Add points for killing the Wumpus
+                # Add a clause to the knowledge base that the Wumpus is dead
+                self.knowledge_base.add_clause(
+                    [self.neg_literal(arrow_y, arrow_x, "W")]
+                )
+                break
+            arrow_x += dx
+            arrow_y += dy
 
     # Method to climb out of the cave and end the game if the agent has gold.
     def climb(self):
@@ -241,7 +282,7 @@ class Agent:
             self.y, self.x = current_y, current_x  # Update agent's current position
             self.perceive_current_cell(program)  # Perceive the current cell again
 
-            directions = self.get_movement_directions()
+            directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
             for dy, dx in directions:
                 ny, nx = current_y + dy, current_x + dx
@@ -294,7 +335,7 @@ class Agent:
                 (Action.SHOOT, (ny, nx))
             )  # Add the shoot action to the agent's actions
             self.point -= 100  # Deduct points for shooting
-            if "W" in cell.element:  # If the Wumpus is present in the cell
+            if Object.WUMPUS in cell.element:  # If the Wumpus is present in the cell
                 cell.set_scream()  # Set scream in the cell where Wumpus is shot
                 self.update_map_after_wumpus_killed(
                     ny, nx, program
@@ -332,23 +373,89 @@ class Agent:
 
     # Helper method to get valid movement directions
     def get_movement_directions(self):
-        return Directions.get_possible_movements(self.direction)
+        return Directions.get_movement_vector(self.direction)
 
     # Helper method to check if a position is within map bounds
     def is_within_bounds(self, x, y):
         return 0 <= x < self.map_size and 0 <= y < self.map_size
 
     def get_action(self, program):
-        current_cell = program.cells[self.y][self.x]
+        # Check for termination conditions
         if self.current_hp <= 0:
             print("Loser !!!")
             return None
-        if "G" in current_cell.element:
+
+        current_cell = program.cells[self.y][self.x]
+
+        # Check for immediate actions
+        if Object.GOLD in current_cell.element:
             return Action.GRAB
-        if "H_P" in current_cell.element:
+        if Object.HEALING_POTIONS in current_cell.element:
             return Action.GRAB
-        if "W" in current_cell.element:
+        if Object.WUMPUS in current_cell.element:
             return Action.SHOOT
+
+        # Use DFS to find the next move
+        path = self.dfs(program)
+        if path:
+            direction, (ny, nx) = path[0]
+
+            # Determine the correct action based on direction
+            movement_vector = Directions.get_movement_vector(self.direction)
+            dx, dy = movement_vector
+
+            if direction == (-1, 0):  # UP
+                if self.direction == Directions.UP:
+                    print("The agent is move forward")
+                    return Action.MOVE_FORWARD
+                elif self.direction == Directions.LEFT:
+                    print("The agent is turn right")
+                    return Action.TURN_RIGHT
+                elif self.direction == Directions.RIGHT:
+                    print("The agent is turn left")
+                    return Action.TURN_LEFT
+                else:
+                    return Action.TURN_LEFT  # if DOWN, turn left twice to go UP
+
+            elif direction == (1, 0):  # DOWN
+                if self.direction == Directions.DOWN:
+                    return Action.MOVE_FORWARD
+                elif self.direction == Directions.LEFT:
+                    return Action.TURN_LEFT
+                elif self.direction == Directions.RIGHT:
+                    return Action.TURN_RIGHT
+                else:
+                    return Action.TURN_LEFT  # if UP, turn left twice to go DOWN
+
+            elif direction == (0, -1):  # LEFT
+                if self.direction == Directions.LEFT:
+                    return Action.MOVE_FORWARD
+                elif self.direction == Directions.UP:
+                    return Action.TURN_LEFT
+                elif self.direction == Directions.DOWN:
+                    return Action.TURN_RIGHT
+                else:
+                    return Action.TURN_LEFT  # if RIGHT, turn left twice to go LEFT
+
+            elif direction == (0, 1):  # RIGHT
+                if self.direction == Directions.RIGHT:
+                    return Action.MOVE_FORWARD
+                elif self.direction == Directions.UP:
+                    return Action.TURN_RIGHT
+                elif self.direction == Directions.DOWN:
+                    return Action.TURN_LEFT
+                else:
+                    return Action.TURN_LEFT  # if LEFT, turn left twice to go RIGHT
+
+        # If no path is found, return to start or explore unexplored cells
+        if self.has_gold:
+            return (
+                Action.CLIMB
+                if (self.y == 0 and self.x == 0)
+                else self.return_to_start(path)
+            )
+
+        return None
 
     def is_dead(self):
         return not self.is_alive

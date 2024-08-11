@@ -25,8 +25,3 @@ class Action(Enum):
     SHOOT = "shoot"
     CLIMB = "climb"
     HEAL = "heal"
-
-
-class GameState(Enum):
-    RUNNING = 1
-    NOT_RUNNING = 2

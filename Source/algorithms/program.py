@@ -1,4 +1,6 @@
 from algorithms.cell import Cell
+from utils.util import Action, Object
+from algorithms.directions import Directions
 
 
 class Program:
@@ -56,7 +58,7 @@ class Program:
         # Mark the starting position (0,0) as safe and set the initial direction to "right"
         self.tmp_map[0][0] = "A"
         self.cells[0][0].safe = True
-        self.cells[0][0].direction = "up"
+        self.cells[0][0].direction = Directions.UP
 
         self.update_map_info()  # Update the map with stench, breeze, whiff, and glow
 
