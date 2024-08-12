@@ -56,7 +56,7 @@ class Program:
                 ]  # Assign elements from the temporary map
 
         # Mark the starting position (0,0) as safe and set the initial direction to "right"
-        self.tmp_map[0][0] = "A"
+        self.tmp_map[0][0] = Object.AGENT.value
         self.cells[0][0].safe = True
         self.cells[0][0].direction = Directions.UP
 
@@ -71,13 +71,17 @@ class Program:
             x (int): The x-coordinate of the cell.
             elements (list): The elements present in the current cell.
         """
-        if "W" in elements:  # If there's a Wumpus in the cell
+        if Object.WUMPUS.value in elements:  # If there's a Wumpus in the cell
             self.add_stench(y, x)  # Add stench to adjacent cells
-        if "H_P" in elements:  # If there's a healing potion in the cell
+        if (
+            Object.HEALING_POTIONS.value in elements
+        ):  # If there's a healing potion in the cell
             self.add_glow(y, x)  # Add glow to adjacent cells
-        if "P_G" in elements:  # If there's poisonous gas in the cell
+        if (
+            Object.POISONOUS_GAS.value in elements
+        ):  # If there's poisonous gas in the cell
             self.add_whiff(y, x)  # Add whiff to adjacent cells
-        elif "P" in elements:  # If there's a pit in the cell
+        elif Object.PIT.value in elements:  # If there's a pit in the cell
             self.add_breeze(y, x)  # Add breeze to adjacent cells
 
     def update_map_info(self):
@@ -114,19 +118,19 @@ class Program:
         for dy, dx in directions:
             nx, ny = x + dx, y + dy
             if 0 <= nx <= self.map_size - 1 and 0 <= ny <= self.map_size - 1:
-                if element == "W":
+                if element == Object.WUMPUS.value:
                     self.cells[ny][
                         nx
                     ].remove_stench()  # Remove stench if Wumpus is removed
-                elif element == "P":
+                elif element == Object.PIT.value:
                     self.cells[ny][
                         nx
                     ].remove_breeze()  # Remove breeze if Pit is removed
-                elif element == "P_G":
+                elif element == Object.POISONOUS_GAS.value:
                     self.cells[ny][
                         nx
                     ].remove_whiff()  # Remove whiff if Poisonous Gas is removed
-                elif element == "H_P":
+                elif element == Object.HEALING_POTIONS.value:
                     self.cells[ny][
                         nx
                     ].remove_glow()  # Remove glow if Healing Potion is removed
@@ -193,13 +197,13 @@ class Program:
             nx, ny = x + dx, y + dy  # Calculate the new coordinates
             if 0 <= nx <= self.map_size - 1 and 0 <= ny <= self.map_size - 1:
                 # Add the corresponding effect to the adjacent cell
-                if object_name == "W":
+                if object_name == Object.WUMPUS.value:
                     self.cells[ny][nx].set_stench()  # Add stench
-                elif object_name == "P":
+                elif object_name == Object.PIT.value:
                     self.cells[ny][nx].set_breeze()  # Add breeze
-                elif object_name == "P_G":
+                elif object_name == Object.WHIFF.value:
                     self.cells[ny][nx].set_whiff()  # Add whiff
-                elif object_name == "H_P":
+                elif object_name == Object.HEALING_POTIONS.value:
                     self.cells[ny][nx].set_glow()  # Add glow
 
     def display_map_test(self):

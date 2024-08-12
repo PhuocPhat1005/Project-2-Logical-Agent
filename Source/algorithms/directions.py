@@ -53,12 +53,12 @@ class Directions(Enum):
         """
         # Định nghĩa các vector di chuyển cho mỗi hướng
         movement_vectors = {
-            Directions.UP: (0, -1),  # Di chuyển UP (Lên) giảm giá trị y-coordinate
+            Directions.UP: (-1, 0),  # Di chuyển UP (Lên) giảm giá trị y-coordinate
             Directions.RIGHT: (
-                1,
                 0,
+                1,
             ),  # Di chuyển RIGHT (Phải) tăng giá trị x-coordinate
-            Directions.DOWN: (0, 1),  # Di chuyển DOWN (Xuống) tăng giá trị y-coordinate
-            Directions.LEFT: (-1, 0),  # Di chuyển LEFT (Trái) giảm giá trị x-coordinate
+            Directions.DOWN: (1, 0),  # Di chuyển DOWN (Xuống) tăng giá trị y-coordinate
+            Directions.LEFT: (0, -1),  # Di chuyển LEFT (Trái) giảm giá trị x-coordinate
         }
         return movement_vectors[current_direction]
