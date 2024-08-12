@@ -16,7 +16,8 @@ def showWumpusWorld(choose_map_result, map):
     M1.showUnknownBoard()
     I1 = Info(screen)
     I1.showLeftBar(choose_map_result, point=0, HP=100)
-    I1.showNoti(2)
+    I1.showNoti(0)
+    pygame.display.update()
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -26,6 +27,60 @@ def showWumpusWorld(choose_map_result, map):
                 if event.key == pygame.K_RETURN or event.key == K_KP_ENTER:
                     return
         pygame.display.update()
+
+def showAgentMove(choose_map_result, map):
+    I2 = Info(screen)
+    M2 = Map(screen, map)
+    # pos-y, pos-x, direction, point, HP, Healing Potion(s)
+    path = [
+        (0, 0, 0, 0, 100, 0),
+        (1, 0, 0, -10, 100, 0),
+        (1, 0, 1, -20, 100, 0),
+        (1, 1, 1, -30, 100, 0),
+        (1, 1, 1, 4970, 100, 0),
+        (1, 1, 2, 4960, 100, 0),
+        (1, 1, 3, 4950, 100, 0),
+        (1, 0, 3, 4940, 100, 0),
+        (1, 0, 2, 4930, 100, 0),
+        (0, 0, 2, 4920, 100, 0)
+    ]
+    I2.showNoti(1)
+    isMoving = True
+    while True:
+        if isMoving:
+            for _ in range(len(path)):
+                for event in pygame.event.get():
+                    if event.type == QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_RETURN or event.key == K_KP_ENTER:
+                            return
+                if _ > 0:
+                    M2.showKnownBoard(path[_-1][0], path[_-1][1])
+                    if path[_][2] > path[_-1][2]:
+                        M2.turnLeft()
+                    elif path[_][2] < path[_-1][2]:
+                        M2.turnRight()
+                M2.showKnownBoard(path[_][0], path[_][1])
+                M2.showAgent(path[_][0], path[_][1])
+                I2.showLeftBar(choose_map_result, path[_][3], path[_][4])
+                pygame.time.wait(300)
+                pygame.display.flip()
+                if 'G' in M2.map_data[path[_][0]][path[_][1]][0]:
+                    M2.deleteGold(path[_][0], path[_][1])
+            I2.showNoti(2)
+            pygame.display.flip()
+            isMoving = False
+        else:
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN or event.key == K_KP_ENTER:
+                        return
+
 
 def showMenu():
     showMenuBackground(screen)
@@ -96,6 +151,7 @@ def mainUI():
             [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
             [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ] ]
     showWumpusWorld(choose_map_result, map)
+    showAgentMove(choose_map_result, map)
 
 while True:
     mainUI()

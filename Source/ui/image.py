@@ -1,5 +1,7 @@
-import pygame
+import pygame, sys
+from pygame.locals import *
 from constants import *
+from text import *
 
 def showGameBackground(screen, area=None):
     #https://wallpapercave.com/w/wp7326071
@@ -87,6 +89,11 @@ class ImageElement:
         self.screen.blit(self.pit_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side))
     def showBreeze(self, i, j):
         self.screen.blit(self.breeze_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + i*self.cell_side))
+    
+    def turnLeft(self):
+        self.agent_img = pygame.transform.rotate(self.agent_img, 90)
+    def turnRight(self):
+        self.agent_img = pygame.transform.rotate(self.agent_img, -90)
 
 class Map(ImageElement):
     def __init__(self, screen, map_data, cell_side=60):
@@ -106,38 +113,75 @@ class Map(ImageElement):
     def returnCellSide(self):
         return self.cell_side
     
-    def showUnknownBoard(self): # Show game board
-        i = 0
-        j = 0
-        for i in range (0, self.h):
-            for j in range (0, self.w):
-                self.showUnknown(i, j)
+    def deleteGold(self, y, x):
+        self.map_data[y][x][0].remove('G')
     
-    def showPath(self): # Show agent move
-        i = 0
-        j = 0
-        #[element, stench, breeze, whiff, glow]
-        for i in range (0, self.h):
-            for j in range (0, self.w):
-                self.showEmpty(i, j)
-                if 'A' in self.map_data[i][j][0]:
-                    self.showAgent(i, j)
-                if 'G' in self.map_data[i][j][0]:
-                    self.showGold(i, j)
-                if 'W' in self.map_data[i][j][0]:
-                    self.showWumpus(i, j)
-                if 'P' in self.map_data[i][j][0]:
-                    self.showPit(i, j)
-                if 'P_G' in self.map_data[i][j][0]:
-                    self.showPoisonousGas(i, j)
-                if 'H_P' in self.map_data[i][j][0]:
-                    self.showHealingPotion(i, j)
+    def deleteWumpus(self, y, x):
+        self.map_data[y][x][0].remove('W')
+        if y > 0:
+            self.map_data[y-1][x][1] = False
+        if y < self.h-1:
+            self.map_data[y+1][x][1] = False
+        if x > 0:
+            self.map_data[y][x-1][1] = False
+        if x < self.w-1:
+            self.map_data[y][x+1][1] = False
+    
+    def showUnknownBoard(self): # Show game board
+        y = 0
+        x = 0
+        for y in range (0, self.h):
+            for x in range (0, self.w):
+                self.showUnknown(y, x)
+    
+    def showKnownBoard(self, y, x): # Show agent move
+        # y = 0
+        # x = 0
+        # #[element, stench, breeze, whiff, glow]
+        # for y in range (0, self.h):
+        #     for x in range (0, self.w):
+        #         self.showEmpty(y, x)
+        #         if 'A' in self.map_data[y][x][0]:
+        #             self.showAgent(y, x)
+        #         if 'G' in self.map_data[y][x][0]:
+        #             self.showGold(y, x)
+        #         if 'W' in self.map_data[y][x][0]:
+        #             self.showWumpus(y, x)
+        #         if 'P' in self.map_data[y][x][0]:
+        #             self.showPit(y, x)
+        #         if 'P_G' in self.map_data[y][x][0]:
+        #             self.showPoisonousGas(y, x)
+        #         if 'H_P' in self.map_data[y][x][0]:
+        #             self.showHealingPotion(y, x)
                 
-                if self.map_data[i][j][1]:
-                    self.showStench(i, j)
-                if self.map_data[i][j][2]:
-                    self.showBreeze(i, j)
-                if self.map_data[i][j][3]:
-                    self.showWhiff(i, j)
-                if self.map_data[i][j][4]:
-                    self.showGlow(i, j)
+        #         if self.map_data[y][x][1]:
+        #             self.showStench(y, x)
+        #         if self.map_data[y][x][2]:
+        #             self.showBreeze(y, x)
+        #         if self.map_data[y][x][3]:
+        #             self.showWhiff(y, x)
+        #         if self.map_data[y][x][4]:
+        #             self.showGlow(y, x)
+        #[element, stench, breeze, whiff, glow]
+        self.showEmpty(y, x)
+        # if 'A' in self.map_data[y][x][0]:
+        #     self.showAgent(y, x)
+        if 'G' in self.map_data[y][x][0]:
+            self.showGold(y, x)
+        if 'W' in self.map_data[y][x][0]:
+            self.showWumpus(y, x)
+        if 'P' in self.map_data[y][x][0]:
+            self.showPit(y, x)
+        if 'P_G' in self.map_data[y][x][0]:
+            self.showPoisonousGas(y, x)
+        if 'H_P' in self.map_data[y][x][0]:
+            self.showHealingPotion(y, x)
+        
+        if self.map_data[y][x][1]:
+            self.showStench(y, x)
+        if self.map_data[y][x][2]:
+            self.showBreeze(y, x)
+        if self.map_data[y][x][3]:
+            self.showWhiff(y, x)
+        if self.map_data[y][x][4]:
+            self.showGlow(y, x)
