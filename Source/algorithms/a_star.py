@@ -18,8 +18,6 @@ def a_star(graph, start, goal, agent, program):
     cost = []
     parent = []
     
-    tmp_hp = agent.current_hp
-    num_potion = agent.healing_potion
     tmp_heal = []
     
     for i in range(map_size):
@@ -32,30 +30,30 @@ def a_star(graph, start, goal, agent, program):
             parent[i].append((-1, -1))
     
     cost[start[0]][start[1]] = 0
-    frontier = [(100 if start in agent.sure_poison else 0, start)]
+    frontier = [(100 if start in agent.sure_poison else 0, start, agent.current_hp, agent.healing_potion)]
     
     direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     prev = (-1, -1)
     while frontier:
-        _, current = heapq.heappop(frontier)
+        _, current, hp, potion = heapq.heappop(frontier)
         if visited[current[0]][current[1]]:
             continue
         visited[current[0]][current[1]] = True
-        if prev != (-1, -1):
+        if current != start:
             if current in agent.sure_poison:
-                if tmp_hp == 25:
-                    if num_potion > 0:
-                        tmp_hp += 25
-                        num_potion -= 1
+                if hp == 25:
+                    if potion > 0:
+                        potion -= 1
+                        hp += 25
                         tmp_heal.append(current)
                     else:
                         continue
                 
             if "P_G" in program.cells[current[0]][current[1]].element:
-                tmp_hp -= 25
-                if tmp_hp <= 0:
+                hp -= 25
+                if hp <= 0:
                     graph[current[0]][current[1]] = -1
-                    return []
+                    continue
             
         for dy, dx in direction:
             ny, nx = current[0] + dy, current[1] + dx
@@ -68,14 +66,17 @@ def a_star(graph, start, goal, agent, program):
                         new_f = abs(ny - goal[0]) + abs(nx - goal[1]) + (100 if (ny, nx) in agent.sure_poison else 0)
                         if (prev[0] - current[0]) * (current[0] - ny) + (prev[1] - current[1]) * (current[1] - nx) == 0:
                             new_f += 10
-                        heapq.heappush(frontier, (new_f, (ny, nx)))
+                        heapq.heappush(frontier, (new_f, (ny, nx), hp, potion))
                         
         if visited[goal[0]][goal[1]]:
+            agent.current_hp = hp
+            agent.healing_potion = potion
             break
         prev = current
         
     if not visited[goal[0]][goal[1]]:
         return []
+    
     
     path = []
     while goal != start:
@@ -83,6 +84,7 @@ def a_star(graph, start, goal, agent, program):
         goal = parent[goal[0]][goal[1]]
     path.append(start)
     path.reverse()
+    
     for cell in (tmp_heal):
         for i, other in enumerate(path):
             if other == cell:
@@ -91,8 +93,5 @@ def a_star(graph, start, goal, agent, program):
                 except:
                     cell = path[i]
         agent.heal.append(cell)
-                        
-    agent.current_hp = tmp_hp
-    agent.healing_potion = num_potion
     
     return path
