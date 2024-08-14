@@ -15,7 +15,7 @@ def showWumpusWorld(choose_map_result, map):
     showGameBackground(screen)
     M1.showUnknownBoard()
     I1 = Info(screen)
-    I1.showLeftBar(choose_map_result, point=0, HP=100)
+    I1.showLeftBar(choose_map_result, point=0, HP=100, H_Ps=0)
     I1.showNoti(0)
     pygame.display.update()
     while True:
@@ -61,10 +61,10 @@ def showAgentMove(choose_map_result, map):
                     if path[_][2] > path[_-1][2]:
                         M2.turnLeft()
                     elif path[_][2] < path[_-1][2]:
-                        M2.turnRight()
+                        M2.turnRight() 
                 M2.showKnownBoard(path[_][0], path[_][1])
                 M2.showAgent(path[_][0], path[_][1])
-                I2.showLeftBar(choose_map_result, path[_][3], path[_][4])
+                I2.showLeftBar(choose_map_result, path[_][3], path[_][4], path[_][5])
                 pygame.time.wait(300)
                 pygame.display.flip()
                 if 'G' in M2.map_data[path[_][0]][path[_][1]][0]:

@@ -127,6 +127,17 @@ class Map(ImageElement):
         if x < self.w-1:
             self.map_data[y][x+1][1] = False
     
+    def deleteHealingPotion(self, y, x):
+        self.map_data[y][x][0].remove('H')
+        if y > 0:
+            self.map_data[y-1][x][4] = False
+        if y < self.h-1:
+            self.map_data[y+1][x][4] = False
+        if x > 0:
+            self.map_data[y][x-1][4] = False
+        if x < self.w-1:
+            self.map_data[y][x+1][4] = False
+    
     def showUnknownBoard(self): # Show game board
         y = 0
         x = 0
