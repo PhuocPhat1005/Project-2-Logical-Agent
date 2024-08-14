@@ -1,5 +1,6 @@
 from algorithms.program import Program
 from algorithms.a_star import a_star, create_graph
+import copy
 # Agent class definition
 class Agent:
     def __init__(self, map_size=10):
@@ -35,8 +36,8 @@ class Agent:
         self.shoot_act = []
         
     def check_have_wumpus(self, y, x, cell = None):
-        print("Knownledge base wumpus: ", self.knowledge_base_wumpus_percept)
-        print("@@@")
+        # print("Knownledge base wumpus: ", self.knowledge_base_wumpus_percept)
+        # print("@@@")
         if(y, x) == (0, 0):
             return False
         if cell is not None:
@@ -52,7 +53,7 @@ class Agent:
             if 0 <= ny <= self.map_size - 1 and 0 <= nx <= self.map_size - 1:
                 if (ny, nx) not in self.knowledge_base_wumpus_percept and (ny, nx) in self.path:
                     return False
-        print("May Wumpus at: ", y, x)
+        # print("May Wumpus at: ", y, x)
         self.maybe_wumpus.append((y,x))
         return True
     
@@ -67,7 +68,7 @@ class Agent:
             if 0 <= ny <= self.map_size - 1 and 0 <= nx <= self.map_size - 1:
                 if (ny, nx) not in self.knowledge_base_pit_percept and (ny, nx) in self.path:
                     return False
-        print("May Pit at: ", y, x)
+        # print("May Pit at: ", y, x)
         self.maybe_pit.append((y,x))
         return True
     
@@ -82,7 +83,7 @@ class Agent:
             if 0 <= ny <= self.map_size - 1 and 0 <= nx <= self.map_size - 1:
                 if (ny, nx) not in self.knowledge_base_poison_percept and (ny, nx) in self.path:
                     return False
-        print("May Poison at: ", y, x)
+        # print("May Poison at: ", y, x)
         self.maybe_poison.append((y,x))
         return True
     
@@ -95,7 +96,7 @@ class Agent:
             if 0 <= ny <= self.map_size - 1 and 0 <= nx <= self.map_size - 1:
                 if (ny, nx) not in self.knowledge_base_health_percept and (ny, nx) in self.path:
                     return False
-        print("May Healing at: ", y, x)
+        # print("May Healing at: ", y, x)
         self.maybe_health.append((y,x))
         return True
     
@@ -109,8 +110,8 @@ class Agent:
         directions = [(1, 0), (-1, 0), (0, -1), (0, 1)]
         
         while frontier:  # While there are cells to explore       
-            print(frontier)   
-            print("Current hp: ", self.current_hp)
+            # print(frontier)   
+            # print("Current hp: ", self.current_hp)
               
             current_y, current_x = frontier.pop()  # Pop the last cell from the frontier
             
@@ -119,11 +120,9 @@ class Agent:
                     if self.healing_potion == 0:
                         continue
                     self.heal.append((self.y, self.x))
-                    print("Good1")
                     self.healing_potion -= 1
                     self.healing_potion = max(self.healing_potion, 0)
                     self.current_hp += 25
-                print("Good2")
                     
             if program.cells[current_y][current_x].is_visited:
                 continue
@@ -147,7 +146,7 @@ class Agent:
             if program.cells[self.y][self.x].is_glow:
                 self.knowledge_base_health_percept.append((self.y, self.x))
 
-            print("Current position: ", self.y, self.x)
+            # print("Current position: ", self.y, self.x)
             
             if "H_P" in program.cells[self.y][self.x].element:
                 self.healing_potion += 1
@@ -156,12 +155,14 @@ class Agent:
                     program.cells[self.y][self.x].element.append('-')
                 program.reset_percepts(self.y, self.x)
                 self.grab_heal.append((self.y, self.x))
+                program.MAPS.append(copy.deepcopy(program.cells))
                 
             if "G" in program.cells[self.y][self.x].element:
                 self.grab_gold.append((self.y, self.x))
                 program.cells[self.y][self.x].element.remove("G")
                 if program.cells[self.y][self.x].element == []:
                     program.cells[self.y][self.x].element.append('-')
+                program.MAPS.append(copy.deepcopy(program.cells))
                     
             for dy, dx in directions:
                 ny, nx = current_y + dy, current_x + dx
@@ -184,12 +185,12 @@ class Agent:
                     if len(tmp_path) < len(tmp_move) or tmp_move == []:
                         tmp_move = tmp_path
                 
-        print("Tmp move: ", tmp_move)
+        # print("Tmp move: ", tmp_move)
         self.path.extend(tmp_move)
         return tmp_move[-1]
     
     def shoot(self, ny, nx, program):
-        print("Shoot at ", ny, nx)
+        # print("Shoot at ", ny, nx)
         try:
             program.cells[ny][nx].element.remove("W")
             if program.cells[ny][nx].element == []:
@@ -200,11 +201,11 @@ class Agent:
             pass
         self.point -= 100
         
-        program.display_map_test()
-        print("||||||||")
+        # program.display_map_test()
+        # print("||||||||")
         return program.cells
     
-    def shoot_process(self, program):
+    def shoot_process(self, program, graph):
         direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for i, cell in enumerate(self.sure_wumpus):
             if not self.check_have_wumpus(cell[0], cell[1]):
@@ -213,11 +214,8 @@ class Agent:
             flag = True
             while flag:
                 self.shoot_act.append((y, x))
-                tmp_map = self.shoot(cell[0], cell[1], program) #Ben UI co can cai nay de ve k, k thi xoa cai tmp_map
-                
-                
-                # if not program.cells[current].is_scream: FIXXXXXXXX
-                #     break
+                new_map = self.shoot(cell[0], cell[1], program)
+                program.MAPS.append(copy.deepcopy(new_map))
                 
                 if not program.cells[y][x].is_scream:
                     flag = False
@@ -233,9 +231,9 @@ class Agent:
                                     program.cells[ny][nx].is_stench = True
                                     break
                 
-                
-                program.display_map_test()
-                print("/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/")
+                program.MAPS.append(copy.deepcopy(program.cells))
+                # program.display_map_test()
+                # print("/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/")
                 
             # for dy, dx in direction:
             #     ny, nx = cell[0] + dy, cell[1] + dx
@@ -248,6 +246,8 @@ class Agent:
                                 
             self.y = cell[0]
             self.x = cell[1]
+            graph[self.y][self.x] = 1
             self.dfs(program)
-                
+            for cell in self.path:
+                graph[cell[0]][cell[1]] = 1
                 
