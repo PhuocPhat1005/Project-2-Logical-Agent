@@ -1,4 +1,6 @@
 from algorithms.cell import Cell
+import copy
+
 class Program:
     """
     Class representing the Wumpus World program that handles the map, cell updates, and game logic.
@@ -21,6 +23,7 @@ class Program:
         self.tmp_map = []  # Temporary storage for map elements
         self.file_path = file_path  # File path for the map file
         self.cells = []  # 2D list to store Cell objects
+        self.MAPS = [] #Store all the map case when it change
         self.read_map()  # Read the map from the file and initialize the game world
 
     def read_map(self):
@@ -174,3 +177,6 @@ class Program:
 
     def get_cell_info(self, y, x):
         return self.tmp_map[y][x]
+
+    def copy(self):
+        return copy.deepcopy(self)
