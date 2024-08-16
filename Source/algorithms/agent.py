@@ -433,6 +433,7 @@ class Agent:
         self.perceive_current_cell(program)  # Perceive the current cell at the start
         frontier = [(self.y, self.x)]  # Initialize the frontier with the current cell
         path = []  # Initialize an empty path
+        trace_path = []  # To store the complete path of the agent's movement
         self.explored_cells.add((self.y, self.x))  # Mark the starting cell as explored
 
         while frontier:  # While there are cells to explore
@@ -453,15 +454,19 @@ class Agent:
                         path.append(
                             (direction, (ny, nx))
                         )  # Append the direction and cell to the path
+                        trace_path.append((direction, (ny, nx)))  # Track the movement
                         self.explored_cells.add((ny, nx))  # Mark this cell as explored
-                        # Move the agent to this new cell
-                        self.y, self.x = ny, nx
+
                     else:
                         self.handle_danger(
                             ny, nx, program
                         )  # Handle dangerous cells (e.g., shoot Wumpus)
 
-        return path
+            # Check if the agent has returned to the starting position or died
+            if self.current_hp <= 0 or (self.y == 0 and self.x == 0 and self.has_gold):
+                break
+
+        return path, trace_path
 
     # Method to handle perceived dangers in a cell and update the knowledge base
     def handle_danger(self, ny, nx, program):
@@ -497,12 +502,6 @@ class Agent:
             ):  # If stench is present in adjacent cells
                 program.cells[ay][ax].element.remove(Object.STENCH.value)
 
-    # Helper method to return to the starting position after exploration
-    def return_to_start(self, path):
-        while path:
-            action, _ = path.pop()
-            self.perform_action(action)
-
     def get_action(self, program):
         # Check for termination conditions
         if self.current_hp <= 0:
@@ -520,9 +519,42 @@ class Agent:
             return Action.SHOOT
 
         # Use DFS to find the next move
-        path = self.dfs(program)
+        path, trace_path = self.dfs(program)
+        if path:
+            direction, (ny, nx) = path[0]
+            movement_action = self.determine_movement_action(direction)
+            self.update_agent_state(direction, (ny, nx), program)
+            return movement_action
+
+        # If no path is found, return to start or explore unexplored cells
+        if self.has_gold:
+            return (
+                Action.CLIMB
+                if (self.y == 0 and self.x == 0)
+                else self.return_to_start(trace_path)
+            )
 
         return None
+
+    def return_to_start(self, path):
+        """Return the agent to the starting position (0,0)."""
+        start_position = (0, 0)
+        reversed_path = []
+
+        # Trace back from the current position to the start
+        current_position = (self.y, self.x)
+
+        # Build a reverse path from the current position to the start
+        while current_position != start_position:
+            for direction, (ny, nx) in path:
+                if (ny, nx) == current_position:
+                    reversed_path.append(
+                        ((-direction[0], -direction[1]), (self.y, self.x))
+                    )
+                    current_position = (self.y - direction[1], self.x - direction[0])
+                    break
+
+        return reversed_path
 
     def update_agent_state(self, direction, new_position, program):
         """Update the agent's state after performing an action."""

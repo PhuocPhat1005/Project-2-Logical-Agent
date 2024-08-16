@@ -5,18 +5,29 @@ from utils.util import Object, Action
 from algorithms.directions import Directions
 
 
+def print_path(trace, actions):
+    with open("output/result1.txt", "w") as f:
+        for i, (pos, action) in enumerate(zip(trace, actions)):
+            output = f"({pos[0]},{pos[1]}): {action.name.lower()}"
+            print(output)
+            f.write(output + "\n")
+
+
 def main():
     program = Program(file_path="input/map1.txt")
     agent = Agent(map_size=program.map_size)
 
-    # ui = WumpusWorldUI(program, agent)
-    # ui.game_loop()
-    program.display_map_test()
-    print("hahahaha")
-    action = Action.MOVE_FORWARD
-    agent.perform_action(action, program)
-    print("Point: ", agent.point)
-    print("hihihihi")
+    trace = []
+    actions = []
+
+    while True:
+        action = agent.get_action(program)
+        if action is None:
+            break
+        actions.append(action)
+        trace.append((agent.y, agent.x))
+
+    print_path(trace, actions)
 
 
 if __name__ == "__main__":

@@ -18,9 +18,9 @@ class Object(Enum):
 
 # Enum for Actions the agent can perform
 class Action(Enum):
-    MOVE_FORWARD = "move_forward"
-    TURN_LEFT = "turn_left"
-    TURN_RIGHT = "turn_right"
+    MOVE_FORWARD = "move forward"
+    TURN_LEFT = "turn left"
+    TURN_RIGHT = "turn right"
     GRAB = "grab"
     SHOOT = "shoot"
     CLIMB = "climb"
