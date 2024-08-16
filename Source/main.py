@@ -183,4 +183,5 @@ def main():
     
     main_ui.showAgentMove(choose_map_result, map, RESULT)
 if __name__ == "__main__":
-    main()
+    while True:
+        main()

@@ -13,7 +13,7 @@ title = pygame.display.set_caption('Logical Agent - Wumpus World')
 def showWumpusWorld(choose_map_result, map):
     M1 = Map(screen, map)
     showGameBackground(screen)
-    M1.showKnownBoard()
+    M1.showUnknownBoard()
     I1 = Info(screen)
     I1.showLeftBar(choose_map_result, point=0, HP=100, H_Ps=0)
     I1.showNoti(0)
