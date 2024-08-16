@@ -42,19 +42,31 @@ class Info(Text_Display):
         self.screen = screen
         self.left_margin = 900
     
-    def reShowInfo(self):
-        area = (self.left_margin, 0, WINDOW_WIDTH-self.left_margin, WINDOW_HEIGHT)
+    def reShowLeftBar(self):
+        area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
         showGameBackground(self.screen, area)
     
-    def showInputInfo(self, choose_input_result):
-        self.write_text_content(f"Input 0{choose_input_result+1}", self.left_margin, 50)
-    
+    def showMapInfo(self, choose_map_result):
+        self.write_text_content(f"Map 0{choose_map_result+1}", self.left_margin, 50)
     def showPoint(self, point=0):
         self.write_text_content(f"Point: {point}", self.left_margin, 200)
     def showHP(self, HP=100):
-        self.write_text_content(f"HP: {HP}%", self.left_margin, 300)
+        self.write_text_content(f"HP: {HP}%", self.left_margin, 350)
+    def showLeftBar(self, choose_map_result, point=0, HP=100):
+        area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
+        showGameBackground(self.screen, area)
+        self.showMapInfo(choose_map_result)
+        self.showPoint(point)
+        self.showHP(HP)
     
-    def showNoti(self):
-        self.write_text_content(f"Press Enter to blabla", BOARD_APPEEAR_WIDTH, SHOW_NOTI)
+    def showNoti(self, noti):
+        area = (BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT, WINDOW_WIDTH-BOARD_APPEEAR_WIDTH, WINDOW_HEIGHT - SHOW_NOTI_HEIGHT)
+        showGameBackground(self.screen, area)
+        if noti == 0:
+            self.write_text_content(f"Press Enter to run the problem.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
+        elif noti == 1:
+            self.write_text_content(f"Agent is moving.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
+        elif noti == 2:
+            self.write_text_content(f"End game. Press Enter to return to menu.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
     
     #def showFull()

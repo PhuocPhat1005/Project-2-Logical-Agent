@@ -3,7 +3,7 @@ from text import *
 from constants import *
 
 class BackButton:
-    def __init__(self, screen, btn_pos_x=40, btn_pos_y=SHOW_NOTI, content='<-- back'):
+    def __init__(self, screen, btn_pos_x=40, btn_pos_y=SHOW_NOTI_HEIGHT, content='<-- back'):
         self.screen = screen
         self.is_click_back = False
         self.back_btn_sprite = None
