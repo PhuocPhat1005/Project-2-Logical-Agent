@@ -110,10 +110,10 @@ def main():
                 # else:
                     # action.append([])
                     
-            if tmp_path[j] in agent.shoot_act and tmp_path[j+1] in agent.sure_wumpus:
-                while(tmp_path[j] in agent.shoot_act):
+            if (tmp_path[j], tmp_path[j + 1]) in agent.shoot_act:
+                while (tmp_path[j], tmp_path[j + 1]) in agent.shoot_act:
                     action.append("Shoot")
-                    agent.shoot_act.remove(tmp_path[j])
+                    agent.shoot_act.remove((tmp_path[j], tmp_path[j + 1]))
                 graph2[tmp_path[j][0]][tmp_path[j][1]] = 1
 
             if tmp_hp == 25:

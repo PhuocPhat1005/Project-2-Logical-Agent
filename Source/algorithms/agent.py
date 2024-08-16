@@ -213,7 +213,7 @@ class Agent:
             y, x = self.go_to_shoot(i, program)
             flag = True
             while flag:
-                self.shoot_act.append((y, x))
+                self.shoot_act.append(((y, x), cell))
                 new_map = self.shoot(cell[0], cell[1], program)
                 program.MAPS.append(copy.deepcopy(new_map))
                 
