@@ -6,7 +6,7 @@ from ui.text import *
 def showGameBackground(screen, area=None):
     #https://wallpapercave.com/w/wp7326071
     #area: (pos_x, pos_y, width, height)
-    background = pygame.image.load('ui/assets/game_background.jpg')
+    background = pygame.image.load(f'ui/assets/game_background.jpg')
     background = pygame.transform.scale(background, (WINDOW_WIDTH, WINDOW_HEIGHT))
     if area == None:
         screen.blit(background, (0, 0))
