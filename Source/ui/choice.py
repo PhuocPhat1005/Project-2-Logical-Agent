@@ -1,6 +1,6 @@
 import pygame
-from text import *
-from constants import *
+from ui.text import *
+from ui.constants import *
 
 class BackButton:
     def __init__(self, screen, btn_pos_x=40, btn_pos_y=SHOW_NOTI_HEIGHT, content='<-- back'):
