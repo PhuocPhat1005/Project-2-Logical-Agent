@@ -46,8 +46,12 @@ def showAgentMove(choose_map_result, map, path):
     # ]
     I2.showNoti(1)
     isMoving = True
+    drirection = 1 # mod = 0: down, 1: right, 2: up, 3: left
+    time_wait_1 = 1000
+    time_wait_2 = 50
     while True:
         if isMoving:
+            y_shoot, x_shoot = -1, -1
             for _ in range(len(path)):
                 for event in pygame.event.get():
                     if event.type == QUIT:
@@ -56,21 +60,35 @@ def showAgentMove(choose_map_result, map, path):
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_RETURN or event.key == K_KP_ENTER:
                             return
-                if path[_][1] == 'Grab Gold':
-                    M2.deleteGold(path[_][0][0], path[_][0][1])
-                if path[_][1] == 'Grab Heal':
-                    M2.deleteHealingPotion(path[_][0][0], path[_][0][1])
                 if _ > 0:
                     M2.showPath(path[_-1][0][0], path[_-1][0][1])
                     if path[_][1] == 'Turn Left':
-                        M2.turnLeft()
+                        drirection = M2.turnLeft(drirection)
                     elif path[_][1] == 'Turn Right':
-                        M2.turnRight() 
+                        drirection = M2.turnRight(drirection)
+                if path[_][1] == 'Grab Gold':
+                    M2.showPath(path[_][0][0], path[_][0][1])
+                    M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
+                    M2.showGold(path[_][0][0], path[_][0][1], M2.returnH())
+                    pygame.display.flip()
+                    pygame.time.wait(time_wait_1)
+                    M2.deleteGold(path, _)
+                if path[_][1] == 'Grab Heal':
+                    M2.showPath(path[_][0][0], path[_][0][1])
+                    M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
+                    M2.showHealingPotion(path[_][0][0], path[_][0][1], M2.returnH())
+                    pygame.display.flip()
+                    pygame.time.wait(time_wait_1)
+                    M2.deleteHealingPotion(path, _) 
                 M2.showPath(path[_][0][0], path[_][0][1])
                 M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
+                if path[_][1] == 'Shoot' and (_==0 or path[_][0] != path[_-1][0]):
+                    y_shoot, x_shoot = M2.agentShoot(path, _, drirection)
+                    pygame.display.flip()
+                    pygame.time.wait(time_wait_1)
                 I2.showLeftBar(choose_map_result, path[_][2], path[_][3], path[_][4])
-                pygame.time.wait(100)
                 pygame.display.flip()
+                pygame.time.wait(time_wait_2)
             I2.showNoti(2)
             pygame.display.flip()
             isMoving = False

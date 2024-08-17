@@ -31,7 +31,10 @@ class ImageElement:
         #https://www.clipartmax.com/download/m2i8A0H7b1Z5d3Z5_miner-miner-png/
         self.agent_img = pygame.image.load('ui/assets/agent.png')
         self.agent_img = pygame.transform.scale(self.agent_img, self.cell_size)
-        #https://www.pngwing.com/en/free-png-nfowr/download
+        #https://pngtree.com/freepng/vector-of-png-bow-arrow_7258676.html
+        self.shoot_img = pygame.image.load('ui/assets/shoot.png')
+        self.shoot_img = pygame.transform.scale(self.shoot_img, self.cell_size)
+        #https://www.hiclipart.com/free-transparent-background-png-clipart-iyjih
         self.gold_img = pygame.image.load('ui/assets/gold.png')
         self.gold_img = pygame.transform.scale(self.gold_img, self.cell_size)
         
@@ -67,6 +70,8 @@ class ImageElement:
         self.screen.blit(self.unknown_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     def showAgent(self, i, j, h):
         self.screen.blit(self.agent_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
+    def showShoot(self, i, j, h):
+        self.screen.blit(self.shoot_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     def showGold(self, i, j, h):
         self.screen.blit(self.gold_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     
@@ -90,10 +95,14 @@ class ImageElement:
     def showBreeze(self, i, j, h):
         self.screen.blit(self.breeze_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     
-    def turnLeft(self):
+    def turnLeft(self, drirection):
         self.agent_img = pygame.transform.rotate(self.agent_img, 90)
-    def turnRight(self):
+        self.shoot_img = pygame.transform.rotate(self.shoot_img, 90)
+        return drirection+1
+    def turnRight(self, drirection):
         self.agent_img = pygame.transform.rotate(self.agent_img, -90)
+        self.shoot_img = pygame.transform.rotate(self.shoot_img, -90)
+        return drirection-1
 
 class Map(ImageElement):
     def __init__(self, screen, map_data, cell_side=65):
@@ -116,14 +125,35 @@ class Map(ImageElement):
     def returnCellSide(self):
         return self.cell_side
     
-    def deleteGold(self, y, x):
+    def agentShoot(self, path, now, drirection):
+        y =  path[now][0][0]
+        x =  path[now][0][1]
+        # mod = 0: down, 1: right, 2: up, 3: left
+        if drirection % 4 == 0:
+            self.showShoot(y-1, x, self.h)
+            return y-1, x
+        elif drirection % 4 == 1:
+            self.showShoot(y, x+1, self.h)
+            return y, x+1
+        elif drirection % 4 == 2:
+            self.showShoot(y+1, x, self.h)
+            return y+1, x
+        elif drirection % 4 == 3:
+            self.showShoot(y, x-1, self.h)
+            return y, x-1
+    def deleteGold(self, path, now):
+        y =  path[now][0][0]
+        x =  path[now][0][1]
         self.map_data[y][x][0].remove('G')
+        # for _ in range(now+1):
+        #     self.showPath(path[_][0][0], path[_][0][1])
     
-    def deleteWumpus(self, y, x):
+    def deleteWumpus(self, path, now):
         self.map_data[y][x][0].remove('W')
+        y =  path[now][0][0]
+        x =  path[now][0][1]
         if y > 0:
             self.map_data[y-1][x][1] = False
-            self.showPath(y-1, x)
         if y < self.h-1:
             self.map_data[y+1][x][1] = False
             self.showPath(y+1, x)
@@ -134,20 +164,28 @@ class Map(ImageElement):
             self.map_data[y][x+1][1] = False
             self.showPath(y, x+1)
     
-    def deleteHealingPotion(self, y, x):
+    def deleteHealingPotion(self, path, now):
+        y =  path[now][0][0]
+        x =  path[now][0][1]
         self.map_data[y][x][0].remove('H_P')
         if y > 0:
             self.map_data[y-1][x][4] = False
-            self.showPath(y-1, x)
+            # if not( 'W' in self.map_data[y-1][x][0] ):
+            #     self.showPath(y-1, x)
         if y < self.h-1:
             self.map_data[y+1][x][4] = False
-            self.showPath(y+1, x)
+            # if not( 'W' in self.map_data[y+1][x][0] ):
+            #     self.showPath(y+1, x)
         if x > 0:
             self.map_data[y][x-1][4] = False
-            self.showPath(y, x-1)
+            # if not( 'W' in self.map_data[y][x-1][0] ):
+            #     self.showPath(y, x-1)
         if x < self.w-1:
             self.map_data[y][x+1][4] = False
-            self.showPath(y, x+1)
+            # if not( 'W' in self.map_data[y][x+1][0] ):
+            #     self.showPath(y, x+1)
+        for _ in range(now+1):
+            self.showPath(path[_][0][0], path[_][0][1])
     
     def showUnknownBoard(self): # Show game board
         y = 0
@@ -215,8 +253,8 @@ class Map(ImageElement):
         #             self.showGlow(y, x, self.h)
         #[element, stench, breeze, whiff, glow]
         self.showEmpty(y, x, self.h)
-        # if 'A' in self.map_data[y][x][0]:
-        #     self.showAgent(y, x, self.h)
+        if 'A' in self.map_data[y][x][0]:
+            self.showAgent(y, x, self.h)
         if 'G' in self.map_data[y][x][0]:
             self.showGold(y, x, self.h)
         if 'W' in self.map_data[y][x][0]:
