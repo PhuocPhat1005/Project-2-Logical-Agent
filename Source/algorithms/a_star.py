@@ -86,12 +86,7 @@ def a_star(graph, start, goal, agent, program):
     path.reverse()
     
     for cell in (tmp_heal):
-        for i, other in enumerate(path):
-            if other == cell:
-                try:
-                    cell = path[i-1]
-                except:
-                    cell = path[i]
-        agent.heal.append(cell)
+        if cell in path:
+            agent.heal.append(cell)
     
     return path
