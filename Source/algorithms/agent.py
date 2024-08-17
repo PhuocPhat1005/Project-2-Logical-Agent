@@ -191,6 +191,9 @@ class Agent:
     
     def shoot(self, ny, nx, program):
         # print("Shoot at ", ny, nx)
+        # shoot_correct = False
+        # if 'W' in program.cells[ny][nx].element:
+        #     shoot_correct = True
         try:
             program.cells[ny][nx].element.remove("W")
             if program.cells[ny][nx].element == []:
@@ -200,6 +203,8 @@ class Agent:
         except:
             pass
         self.point -= 100
+        # if shoot_correct:
+        #     program.add_to_adjacent(ny, nx, "Kill_wumpus")
         
         # program.display_map_test()
         # print("||||||||")

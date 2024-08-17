@@ -10,11 +10,11 @@ def main():
     program = Program(file_path)
     ma = program.return_map_test()
     map = copy.deepcopy(ma)
-    print("_________________________")
-    for i in range(len(map)):
-        for j in range(len(map[i])):
-            print(map[i][j], end=" ")
-        print()
+    # print("_________________________")
+    # for i in range(len(map)):
+    #     for j in range(len(map[i])):
+    #         print(map[i][j], end=" ")
+    #     print()
     program.MAPS.append(copy.deepcopy(program.cells))
     agent = Agent(map_size=program.map_size)
     # program.display_map_test()
@@ -160,13 +160,23 @@ def main():
                     agent.point -= 10
                 RESULT.append((cell[0], act, agent.point, cell[2], cell[3], map_index))
     # RESULT.append(((0, 0), "Climb", agent.current_hp, agent.healing_potion))
-    print("RESULT: ")
+    # print("RESULT: ")
     for cell in RESULT:
         print(cell)
     # for all_cells in program.MAPS:
     #     for row_cell in all_cells:
     #         for cell in row_cell:
-    #             print(cell.element, end=" ")
+    #             print(
+    #                 "[",
+    #                 cell.element,
+    #                 "T" if cell.is_stench else "F",
+    #                 "T" if cell.is_breeze else "F",
+    #                 "T" if cell.is_whiff else "F",
+    #                 "T" if cell.is_glow else "F",
+    #                 "T" if cell.is_scream else "F",
+    #                 "]",
+    #                 end=" ",
+    #             )
     #         print()
     #     print("--------------------------------")
     # print(len(program.MAPS))
@@ -180,8 +190,13 @@ def main():
     #     for cell in row:
     #         print(cell, end=" ")
     #     print()
-    
-    main_ui.showAgentMove(choose_map_result, map, RESULT)
+    # print(len(program.MAPS))
+    # print(len(primary_path))
+    # print(primary_path[0])
+    # print(RESULT[0])
+    # print(program.MAPS[0][0][0].element)
+    maps = copy.deepcopy(program.MAPS)
+    main_ui.showAgentMove(choose_map_result, map, RESULT, maps)
 if __name__ == "__main__":
     while True:
         main()

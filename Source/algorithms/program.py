@@ -40,7 +40,7 @@ class Program:
                 # Split the line by '.' to get rooms, then split each room by ','
                 row = [cell.split(",") for cell in line.split(".")]  # Parse each row
                 self.tmp_map.append(row)  # Append the processed row to the temporary map
-        print(self.tmp_map)
+        # print(self.tmp_map)
         # Initialize cells with positions and elements
         for y in range(self.map_size):
             self.cells.append([])  # Initialize a new row in cells
@@ -143,13 +143,15 @@ class Program:
                 elif object_name == "H_P":
                     self.cells[ny][nx].is_glow = True
                 elif object_name == "Reset":
-                    self.cells[ny][nx].is_stench = False
-                    self.cells[ny][nx].is_breeze = False
+                    # self.cells[ny][nx].is_stench = False
+                    # self.cells[ny][nx].is_breeze = False
                     self.cells[ny][nx].is_whiff = False
                     self.cells[ny][nx].is_glow = False
                     self.cells[ny][nx].is_scream = False
                 elif object_name == "Shoot_wumpus":
                     self.cells[ny][nx].is_scream = True
+                # elif object_name == "Kill_wumpus":
+                #     self.cells[ny][nx].kill_wumpus = True
                     
 
     def display_map_test(self):

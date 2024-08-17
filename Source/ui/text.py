@@ -55,7 +55,7 @@ class Info(Text_Display):
     def showHealingPotion(self, H_Ps=0):
         self.write_text_content(f"Healing Potion(s): {H_Ps}", self.left_margin, 500)
     def showLeftBar(self, choose_map_result, point=10000, HP=100, H_Ps=0):
-        area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
+        area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), SHOW_NOTI_HEIGHT)
         showGameBackground(self.screen, area)
         self.showMapInfo(choose_map_result)
         self.showPoint(point)
@@ -68,8 +68,12 @@ class Info(Text_Display):
         if noti == 0:
             self.write_text_content(f"Press Enter to run the problem.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
         elif noti == 1:
-            self.write_text_content(f"Agent is moving.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
+            self.write_text_content(f"Agent is moving. Press Enter to return to menu.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
         elif noti == 2:
+            self.write_text_content(f"Agent exits the cave successfully. Press Enter to return to menu.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT, font_size=FONT_MEDIUM_SMALL)
+        elif noti == 3:
             self.write_text_content(f"End game. Press Enter to return to menu.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
+        elif noti == 4:
+            self.write_text_content(f"Agent can not move. Press Enter to return to menu.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
     
     #def showFull()

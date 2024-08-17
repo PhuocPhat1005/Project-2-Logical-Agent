@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, copy
 from pygame.locals import *
 from ui.constants import *
 from ui.text import *
@@ -111,7 +111,7 @@ class ImageElement:
 class Map(ImageElement):
     def __init__(self, screen, map_data, cell_side=65):
         # Read and store map data
-        self.map_data = map_data.copy()
+        self.map_data = copy.deepcopy(map_data)
         self.h = len(map_data)
         self.w = len(map_data[0])
         cell_side = 65
@@ -126,25 +126,28 @@ class Map(ImageElement):
     def returnH(self):
         return self.h
     
+    def updateMap(self, map_data):
+        self.map_data = copy.deepcopy(map_data)
+    
     def returnCellSide(self):
         return self.cell_side
     
     def agentShoot(self, path, now, drirection):
         y =  path[now][0][0]
         x =  path[now][0][1]
-        # mod = 0: down, 1: right, 2: up, 3: left
+        # mod = 0: right, 1: up, 2: left, 3: down
         if drirection % 4 == 0:
-            self.showShoot(y-1, x, self.h)
-            return y-1, x
-        elif drirection % 4 == 1:
             self.showShoot(y, x+1, self.h)
             return y, x+1
-        elif drirection % 4 == 2:
+        elif drirection % 4 == 1:
             self.showShoot(y+1, x, self.h)
             return y+1, x
-        elif drirection % 4 == 3:
+        elif drirection % 4 == 2:
             self.showShoot(y, x-1, self.h)
             return y, x-1
+        elif drirection % 4 == 3:
+            self.showShoot(y-1, x, self.h)
+            return y-1, x
     def deleteGold(self, path, now):
         y =  path[now][0][0]
         x =  path[now][0][1]
