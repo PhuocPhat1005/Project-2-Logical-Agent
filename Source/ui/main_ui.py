@@ -11,6 +11,9 @@ screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 title = pygame.display.set_caption('Logical Agent - Wumpus World')
 
 def showWumpusWorld(choose_map_result, map):
+    print('here')
+    print(choose_map_result)
+    
     M1 = Map(screen, map)
     showGameBackground(screen)
     M1.showUnknownBoard()
@@ -111,11 +114,14 @@ def showMenu():
     map_choose_option = None
     mapChoice = ['Map 01', 'Map 02', 'Map 03', 'Map 04', 'Map 05']
     mapMenu = Choice(screen, mapChoice, '')
+    mapChoice_2 = ['Map 06', 'Map 07', 'Map 08', 'Map 09', 'Map 10']
+    mapMenu_2 = Choice(screen, mapChoice_2, '')
 
     while True:
         is_up = False
         is_down = False
         is_left = False
+        is_right = False
         is_enter = False
 
         for event in pygame.event.get():
@@ -123,32 +129,45 @@ def showMenu():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN and is_down == False and is_up == False and is_left == False and is_enter == False:
+                if event.key == pygame.K_DOWN and is_down == False and is_up == False and is_left == False and is_right == False and is_enter == False:
                     is_down = True
-                elif event.key == pygame.K_UP and is_down == False and is_up == False and is_left == False and is_enter == False:
+                elif event.key == pygame.K_UP and is_down == False and is_up == False and is_left == False and is_right == False and is_enter == False:
                     is_up = True
-                elif event.key == pygame.K_LEFT and is_down == False and is_up == False and is_left == False and is_enter == False:
+                elif event.key == pygame.K_LEFT and is_down == False and is_up == False and is_left == False and is_right == False and is_enter == False:
                     is_left = True
-                elif (event.key == pygame.K_RETURN or event.key == K_KP_ENTER) and is_down == False and is_up == False and is_left == False and is_enter == False:
+                elif event.key == pygame.K_RIGHT and is_down == False and is_up == False and is_left == False and is_right == False and is_enter == False:
+                    is_right = True
+                elif (event.key == pygame.K_RETURN or event.key == K_KP_ENTER) and is_down == False and is_up == False and is_left == False and is_right == False and is_enter == False:
                     is_enter = True
         
         if choose_option is None:
-            menu.display_option(is_up, is_down, is_left, is_enter)
+            menu.display_option(is_up, is_down, is_left, is_right, is_enter)
             choose_option = menu.get_option_result()
         else:
             if choose_option == 0:
-                if map_choose_option is None:
-                    mapMenu.display_option(is_up, is_down, is_left, is_enter)
+                if map_choose_option is None:                    
+                    mapMenu.display_option(is_up, is_down, is_left, is_right, is_enter)
                     map_choose_option = mapMenu.get_option_result()
                 else:
                     return map_choose_option
-                choose_option = mapMenu.get_back_to()
+                if is_left:
+                    choose_option = mapMenu.get_back_to(None, 0)
+                if is_right:
+                    choose_option = mapMenu.get_next_to(-1, 0)
             if choose_option == 1:
                 credit.display_credit(is_left)
                 choose_option = credit.get_back_to()
             if choose_option == 2:
                 pygame.quit()
                 sys.exit()
+            if choose_option == -1: # input page 2
+                if map_choose_option is None:                    
+                    mapMenu_2.display_option(is_up, is_down, is_left, is_right, is_enter, can_next=False)
+                    map_choose_option = mapMenu_2.get_option_result()
+                else:
+                    return map_choose_option + 5
+                if is_left:
+                    choose_option = mapMenu_2.get_back_to(0, -1)
         pygame.display.update()
 
 #(base) D:\HCMUS\Co so AI\CSC14003 - Introduction to AI\Proj2\Project-2-Logical-Agent\Source>

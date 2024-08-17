@@ -28,6 +28,29 @@ class BackButton:
             self.is_click_back = False
             return option
         return current
+    
+class NextButton:
+    def __init__(self, screen, btn_pos_x=1150, btn_pos_y=SHOW_NOTI_HEIGHT, content='next -->'):
+        self.screen = screen
+        self.is_click_next = False
+        self.next_btn_sprite = None
+        
+        text_obj = Text_Display(content)
+        text_content = text_obj.show_text()
+        text_pos = (btn_pos_x, btn_pos_y)
+        
+        self.next_btn_sprite = text_obj.get_text_position()
+        self.next_btn_sprite.x = btn_pos_x
+        self.next_btn_sprite.y = btn_pos_y
+        
+        self.screen.blit(text_content, text_pos)
+    
+    def next_to(self, is_click=False, option=None, current=None):
+        self.is_click_next = is_click
+        if self.is_click_next:
+            self.is_click_next = False
+            return option
+        return current
 
 class ChoiceList:
     def __init__(self, screen):
@@ -78,7 +101,9 @@ class Choice:
     def __init__(self, screen, choice, title_obj):
         self.screen = screen
         self.is_click_back = False
+        self.is_click_next = False
         self.option_back_to = None
+        self.option_next_to = None
         self.option_result = None
         self.choice_list = []
         for _ in range (len(choice)):
@@ -97,25 +122,45 @@ class Choice:
         return 0
     
     def get_level(self):
-        for i, element in enumerate(self.choice_list):
+        for _, element in enumerate(self.choice_list):
             if element[0]:
                 return element
         return 0
     
-    def get_back_to(self):
+    # def get_back_to(self):
+    #     if self.is_click_back:
+    #         self.is_click_back = False
+    #         res = self.option_back_to
+    #         self.option_back_to = None
+    #         return res
+    #     return 0
+    
+    # def get_next_to(self):
+    #     if self.is_click_next:
+    #         self.is_click_next = False
+    #         res = self.option_next_to
+    #         self.option_next_to = None
+    #         return res
+    #     return 0
+    
+    def get_back_to(self, des, curr):
         if self.is_click_back:
             self.is_click_back = False
-            res = self.option_back_to
-            self.option_back_to = None
-            return res
-        return 0
+            return des
+        return curr
+    
+    def get_next_to(self, des, curr):
+        if self.is_click_next:
+            self.is_click_next = False
+            return des
+        return curr
     
     def get_option_result(self):
         res = self.option_result
         self.option_result = None
         return res
     
-    def display_option(self, is_up, is_down, is_left, is_enter):
+    def display_option(self, is_up, is_down, is_left, is_right, is_enter, can_back=True, can_next=True):
         self.screen.blit(self.background, (0, 0))
         height=100
         if self.title_obj != '':
@@ -126,11 +171,22 @@ class Choice:
             height = WINDOW_HEIGHT
         
         if self.title_obj == '':
-            back_button = BackButton(self.screen)
+            # back_button = BackButton(self.screen)
+            # next_button = NextButton(self.screen)
+            
+            if can_back:
+                BackButton(self.screen)
+            if can_next:
+                NextButton(self.screen)
+            
             if is_left:
                 is_left = False
                 self.is_click_back = True
-                self.option_back_to = back_button.back_to(self.is_click_back, None, 0)
+                # self.option_back_to = back_button.back_to(self.is_click_back, None, 0)
+            elif is_right:
+                is_right = False
+                self.is_click_next = True
+                # self.option_next_to = next_button.next_to(self.is_click_next, -1, 0)
         if is_enter:
             is_enter = False
             self.option_result = self.get_choice()
