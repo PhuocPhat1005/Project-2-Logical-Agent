@@ -37,7 +37,6 @@ def main():
     # print("With all information, we have: ")
     # print("Sure Wumpus: ", agent.sure_wumpus)
     # print("Sure Pit: ", agent.sure_pit)
-    # print("Sure Poison: ", agent.sure_poison)
     # print("Sure Health: ", agent.sure_health)
     
 
@@ -49,8 +48,8 @@ def main():
     agent.path.append((0, 0)) #quay ve o (0,0)
     # print("Shoot:", agent.shoot_act)
     # print("Sure Wumpus:", agent.sure_wumpus)
-    # print("Sure poison:", agent.sure_poison)
-    # print("Heal:", agent.heal)
+    print("Sure poison:", agent.sure_poison)
+    print("Heal:", agent.heal)
     agent.current_hp = 100
     tmp_poition = 0
     tmp_hp = 100
@@ -163,8 +162,8 @@ def main():
                 RESULT.append((cell[0], act, agent.point, cell[2], cell[3], map_index))
     # RESULT.append(((0, 0), "Climb", agent.current_hp, agent.healing_potion))
     # print("RESULT: ")
-    for cell in RESULT:
-        print(cell)
+    # for cell in RESULT:
+    #     print(cell)
     # for all_cells in program.MAPS:
     #     for row_cell in all_cells:
     #         for cell in row_cell:
@@ -172,10 +171,10 @@ def main():
     #                 "[",
     #                 cell.element,
     #                 "T" if cell.is_stench else "F",
-    #                 "T" if cell.is_breeze else "F",
-    #                 "T" if cell.is_whiff else "F",
-    #                 "T" if cell.is_glow else "F",
-    #                 "T" if cell.is_scream else "F",
+    #                 # "T" if cell.is_breeze else "F",
+    #                 # "T" if cell.is_whiff else "F",
+    #                 # "T" if cell.is_glow else "F",
+    #                 # "T" if cell.is_scream else "F",
     #                 "]",
     #                 end=" ",
     #             )

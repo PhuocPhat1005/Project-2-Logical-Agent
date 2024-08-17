@@ -146,7 +146,7 @@ class Program:
                     self.cells[ny][nx].is_stench = False
                     # self.cells[ny][nx].is_breeze = False
                     # self.cells[ny][nx].is_whiff = False
-                    self.cells[ny][nx].is_glow = False
+                    # self.cells[ny][nx].is_glow = False
                     self.cells[ny][nx].is_scream = False
                 elif object_name == "Shoot_wumpus":
                     self.cells[ny][nx].is_scream = True
