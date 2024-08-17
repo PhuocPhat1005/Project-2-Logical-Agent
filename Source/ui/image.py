@@ -43,6 +43,8 @@ class ImageElement:
         self.wumpus_img = pygame.transform.scale(self.wumpus_img, self.cell_size)
         self.stench_img = pygame.image.load('ui/assets/stench.png')
         self.stench_img = pygame.transform.scale(self.stench_img, self.cell_size)
+        self.scream_img = pygame.image.load('ui/assets/scream.png')
+        self.scream_img = pygame.transform.scale(self.scream_img, self.cell_size)
         
         #https://www.pikpng.com/pngvi/mTJTmi_ground-clipart-crack-hole-in-ground-drawing-png-download/
         self.pit_img = pygame.image.load('ui/assets/pit.png')
@@ -79,6 +81,8 @@ class ImageElement:
         self.screen.blit(self.wumpus_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     def showStench(self, i, j, h):
         self.screen.blit(self.stench_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
+    def showScream(self, i, j, h):
+        self.screen.blit(self.scream_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     
     def showPoisonousGas(self, i, j, h):
         self.screen.blit(self.poisonous_gas_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
@@ -149,41 +153,92 @@ class Map(ImageElement):
         #     self.showPath(path[_][0][0], path[_][0][1])
     
     def deleteWumpus(self, path, now):
-        self.map_data[y][x][0].remove('W')
         y =  path[now][0][0]
         x =  path[now][0][1]
+        self.map_data[y][x][0].remove('W')
         if y > 0:
-            self.map_data[y-1][x][1] = False
+            if y-1 > 0 and 'W' in self.map_data[y-2][x][0]:
+                pass
+            elif x-1 > 0 and 'W' in self.map_data[y-1][x-1][0]:
+                pass
+            elif x+1 < self.w-1 and 'W' in self.map_data[y-1][x+1][0]:
+                pass
+            else:
+                self.map_data[y-1][x][1] = False
+                self.map_data[y-1][x][5] = True
         if y < self.h-1:
-            self.map_data[y+1][x][1] = False
-            self.showPath(y+1, x)
+            if y+1 < self.h-1 and 'W' in self.map_data[y+1][x][0]:
+                pass
+            elif x-1 > 0 and 'W' in self.map_data[y+1][x-1][0]:
+                pass
+            elif x+1 < self.w-1 and 'W' in self.map_data[y+1][x+1][0]:
+                pass
+            else:
+                self.map_data[y+1][x][1] = False
+                self.map_data[y+1][x][5] = True
         if x > 0:
-            self.map_data[y][x-1][1] = False
-            self.showPath(y, x-1)
+            if x-1 > 0 and 'W' in self.map_data[y][x-2][0]:
+                pass
+            elif y-1 > 0 and 'W' in self.map_data[y-1][x-1][0]:
+                pass
+            elif y+1 < self.h-1 and 'W' in self.map_data[y+1][x-1][0]:
+                pass
+            else:
+                self.map_data[y][x-1][1] = False
+                self.map_data[y][x-1][5] = True
         if x < self.w-1:
-            self.map_data[y][x+1][1] = False
-            self.showPath(y, x+1)
+            if x-1 > 0 and 'W' in self.map_data[y][x-2][0]:
+                pass
+            elif y-1 > 0 and 'W' in self.map_data[y-1][x-1][0]:
+                pass
+            elif y+1 < self.h-1 and 'W' in self.map_data[y+1][x-1][0]:
+                pass
+            else:
+                self.map_data[y][x+1][1] = False
+                self.map_data[y][x+1][5] = True
+        for _ in range(now+1):
+            self.showPath(path[_][0][0], path[_][0][1])
     
     def deleteHealingPotion(self, path, now):
         y =  path[now][0][0]
         x =  path[now][0][1]
         self.map_data[y][x][0].remove('H_P')
         if y > 0:
-            self.map_data[y-1][x][4] = False
-            # if not( 'W' in self.map_data[y-1][x][0] ):
-            #     self.showPath(y-1, x)
+            if y-1 > 0 and 'H_P' in self.map_data[y-2][x][0]:
+                pass
+            elif x-1 > 0 and 'H_P' in self.map_data[y-1][x-1][0]:
+                pass
+            elif x+1 < self.w-1 and 'H_P' in self.map_data[y-1][x+1][0]:
+                pass
+            else:
+                self.map_data[y-1][x][4] = False
         if y < self.h-1:
-            self.map_data[y+1][x][4] = False
-            # if not( 'W' in self.map_data[y+1][x][0] ):
-            #     self.showPath(y+1, x)
+            if y+1 < self.h-1 and 'H_P' in self.map_data[y+1][x][0]:
+                pass
+            elif x-1 > 0 and 'H_P' in self.map_data[y+1][x-1][0]:
+                pass
+            elif x+1 < self.w-1 and 'H_P' in self.map_data[y+1][x+1][0]:
+                pass
+            else:
+                self.map_data[y+1][x][4] = False
         if x > 0:
-            self.map_data[y][x-1][4] = False
-            # if not( 'W' in self.map_data[y][x-1][0] ):
-            #     self.showPath(y, x-1)
+            if x-1 > 0 and 'H_P' in self.map_data[y][x-2][0]:
+                pass
+            elif y-1 > 0 and 'H_P' in self.map_data[y-1][x-1][0]:
+                pass
+            elif y+1 < self.h-1 and 'H_P' in self.map_data[y+1][x-1][0]:
+                pass
+            else:
+                self.map_data[y][x-1][4] = False
         if x < self.w-1:
-            self.map_data[y][x+1][4] = False
-            # if not( 'W' in self.map_data[y][x+1][0] ):
-            #     self.showPath(y, x+1)
+            if x+1 < self.w-1 and 'H_P' in self.map_data[y][x+1][0]:
+                pass
+            elif y-1 > 0 and 'H_P' in self.map_data[y-1][x-1][0]:
+                pass
+            elif y+1 < self.h-1 and 'H_P' in self.map_data[y+1][x-1][0]:
+                pass
+            else:
+                self.map_data[y][x+1][4] = False
         for _ in range(now+1):
             self.showPath(path[_][0][0], path[_][0][1])
     
@@ -274,3 +329,5 @@ class Map(ImageElement):
             self.showWhiff(y, x, self.h)
         if self.map_data[y][x][4]:
             self.showGlow(y, x, self.h)
+        if self.map_data[y][x][5]:
+            self.showScream(y, x, self.h)
