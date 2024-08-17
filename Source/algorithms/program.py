@@ -143,7 +143,7 @@ class Program:
                 elif object_name == "H_P":
                     self.cells[ny][nx].is_glow = True
                 elif object_name == "Reset":
-                    # self.cells[ny][nx].is_stench = False
+                    self.cells[ny][nx].is_stench = False
                     # self.cells[ny][nx].is_breeze = False
                     # self.cells[ny][nx].is_whiff = False
                     self.cells[ny][nx].is_glow = False

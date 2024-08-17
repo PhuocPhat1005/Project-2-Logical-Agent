@@ -46,8 +46,9 @@ def showAgentMove(choose_map_result, path, m, level):
     I2.showNoti(1)
     isMoving = True
     drirection = 1 # mod = 0: right, 1: up, 2: left, 3: down
-    time_wait_1 = 200
-    time_wait_2 = 50
+    time_wait_1 = 50
+    time_wait_2 = 200
+    time_wait_3 = 500
     maps = []
     #[element, stench, breeze, whiff, glow, scream]
     for _ in range(len(m)):
@@ -59,7 +60,7 @@ def showAgentMove(choose_map_result, path, m, level):
     count_map = 1
     M2 = Map(screen, maps[0])
     while True:
-        if isMoving and len(path) > 0:
+        if isMoving:# and len(path) > 0:
             y_shoot, x_shoot = -1, -1
             for _ in range(len(path)):
                 for event in pygame.event.get():
@@ -96,7 +97,7 @@ def showAgentMove(choose_map_result, path, m, level):
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                     M2.showGold(path[_][0][0], path[_][0][1], M2.returnH())
                     pygame.display.flip()
-                    pygame.time.wait(time_wait_1)
+                    pygame.time.wait(time_wait_3)
                     M2.updateMap(maps[count_map])
                     count_map += 1
                     # M2.deleteGold(path, _)
@@ -105,30 +106,35 @@ def showAgentMove(choose_map_result, path, m, level):
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                     M2.showHealingPotion(path[_][0][0], path[_][0][1], M2.returnH())
                     pygame.display.flip()
-                    pygame.time.wait(time_wait_1)
+                    pygame.time.wait(time_wait_3)
                     M2.updateMap(maps[count_map])
                     count_map += 1
-                    # M2.deleteHealingPotion(path, _) 
+                    # M2.deleteHealingPotion(path, _)
+                for __ in range(_+1):
+                    M2.showPath(path[__][0][0], path[__][0][1])
+                M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                 if path[_][1] == 'Shoot':# and (_==0 or path[_][0] != path[_-1][0]):
                     M2.showPath(path[_][0][0], path[_][0][1])
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                     pygame.display.flip()
-                    pygame.time.wait(200)
+                    pygame.time.wait(time_wait_1)
                     y_shoot, x_shoot = M2.agentShoot(path, _, drirection)
                     pygame.display.flip()
-                    pygame.time.wait(100)
+                    pygame.time.wait(time_wait_3)
                     M2.updateMap(maps[count_map])
                     count_map += 1
+                if _ > 0 and path[_][1] != 'Shoot' and path[_-1][1] == 'Shoot':
+                    M2.showUnknown(y_shoot, x_shoot, M2.returnH())
                 I2.showLeftBar(choose_map_result, path[_][2], path[_][3], path[_][4])
-                for __ in range(_+1):
-                    M2.showPath(path[__][0][0], path[__][0][1])
-                M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                 pygame.display.flip()
-                pygame.time.wait(time_wait_2)
+                pygame.time.wait(time_wait_1)
             if path[-1][3] == 0:
                 I2.showNoti(3)
-            else:
+            elif path[-1][1] == 'Climb':
                 I2.showNoti(2)
+                M2.showPath(path[-1][0][0], path[-1][0][1])
+            elif path[-1][1] != 'Climb':
+                I2.showNoti(4)
                 M2.showPath(path[-1][0][0], path[-1][0][1])
             I2.showLeftBar(choose_map_result, path[-1][2], path[-1][3], path[-1][4])
             pygame.display.flip()
