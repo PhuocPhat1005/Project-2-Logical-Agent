@@ -1,6 +1,7 @@
 from algorithms.program import Program
 from algorithms.a_star import a_star, create_graph
 import copy
+import heapq
 
 
 # Agent class definition
@@ -172,7 +173,23 @@ class Agent:
                 program.cells[self.y][self.x].element.remove("H_P")
                 if program.cells[self.y][self.x].element == []:
                     program.cells[self.y][self.x].element.append("-")
-                program.reset_percepts(self.y, self.x)
+                for dy, dx in directions:
+                    ny, nx = self.y + dy, self.x + dx
+                    if (
+                        0 <= ny <= program.map_size - 1
+                        and 0 <= nx <= program.map_size - 1
+                    ):
+                        program.cells[ny][nx].is_glow = False
+                        for dyy, dxx in directions:
+                            nyy, nxx = ny + dyy, nx + dxx
+                            if (
+                                0 <= nyy <= program.map_size - 1
+                                and 0 <= nxx <= program.map_size - 1
+                            ):
+                                if "H_P" in program.cells[nyy][nxx].element:
+                                    program.cells[ny][nx].is_glow = True
+                                    break
+
                 self.grab_heal.append((self.y, self.x))
                 program.MAPS.append(copy.deepcopy(program.cells))
 
@@ -212,15 +229,20 @@ class Agent:
 
     def shoot(self, ny, nx, program):
         # print("Shoot at ", ny, nx)
+        # shoot_correct = False
+        # if 'W' in program.cells[ny][nx].element:
+        #     shoot_correct = True
         try:
             program.cells[ny][nx].element.remove("W")
             if program.cells[ny][nx].element == []:
                 program.cells[ny][nx].element.append("-")
-            program.add_to_adjacent(ny, nx, "Reset")
+            program.reset_percepts(ny, nx)
             program.add_to_adjacent(ny, nx, "Shoot_wumpus")
         except:
             pass
         self.point -= 100
+        # if shoot_correct:
+        #     program.add_to_adjacent(ny, nx, "Kill_wumpus")
 
         # program.display_map_test()
         # print("||||||||")
@@ -228,8 +250,22 @@ class Agent:
 
     def shoot_process(self, program, graph):
         direction = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        # non_visit = self.sure_wumpus
         for i, cell in enumerate(self.sure_wumpus):
-            if not self.check_have_wumpus(cell[0], cell[1]):
+            # MIN = 10**2 * 10**2 + 1
+            # BEST_CELL = (-1, -1)
+            # for cell2 in self.sure_wumpus:
+            #     l2 = (cell2[0] - self.y) ** 2 + (cell2[1] - self.x) ** 2
+            #     if l2 < MIN and cell2 in non_visit:
+            #         MIN = l2
+            #         BEST_CELL = cell2
+            # cell2 = BEST_CELL
+            # if cell2 == (-1, -1):
+            #     return
+            # non_visit.remove(cell2)
+            if not self.check_have_wumpus(cell[0], cell[1]) or self.check_have_pit(
+                cell[0], cell[1], program.cells[self.y][self.x]
+            ):
                 continue
             y, x = self.go_to_shoot(i, program)
             flag = True

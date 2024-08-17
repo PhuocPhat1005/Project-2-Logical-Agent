@@ -11,11 +11,11 @@ def main():
     program = Program(file_path)
     ma = program.return_map_test()
     map = copy.deepcopy(ma)
-    print("_________________________")
-    for i in range(len(map)):
-        for j in range(len(map[i])):
-            print(map[i][j], end=" ")
-        print()
+    # print("_________________________")
+    # for i in range(len(map)):
+    #     for j in range(len(map[i])):
+    #         print(map[i][j], end=" ")
+    #     print()
     program.MAPS.append(copy.deepcopy(program.cells))
     agent = Agent(map_size=program.map_size)
     # program.display_map_test()
@@ -38,7 +38,6 @@ def main():
     # print("With all information, we have: ")
     # print("Sure Wumpus: ", agent.sure_wumpus)
     # print("Sure Pit: ", agent.sure_pit)
-    # print("Sure Poison: ", agent.sure_poison)
     # print("Sure Health: ", agent.sure_health)
 
     graph1 = create_graph(agent.path, agent.map_size)
@@ -48,8 +47,8 @@ def main():
     agent.path.append((0, 0))  # quay ve o (0,0)
     # print("Shoot:", agent.shoot_act)
     # print("Sure Wumpus:", agent.sure_wumpus)
-    # print("Sure poison:", agent.sure_poison)
-    # print("Heal:", agent.heal)
+    print("Sure poison:", agent.sure_poison)
+    print("Heal:", agent.heal)
     agent.current_hp = 100
     tmp_poition = 0
     tmp_hp = 100
@@ -137,11 +136,12 @@ def main():
         if path_with_info != []:
             primary_path.append((path_with_info))
 
-    path_with_info = []
-    path_with_info.append(
-        ((0, 0), ["Climb"], primary_path[-1][-1][2], primary_path[-1][-1][3])
-    )
-    primary_path.append((path_with_info))
+    if primary_path[-1][-1][0] == (0, 1) or primary_path[-1][-1][0] == (1, 0):
+        path_with_info = []
+        path_with_info.append(
+            ((0, 0), ["Climb"], primary_path[-1][-1][2], primary_path[-1][-1][3])
+        )
+        primary_path.append((path_with_info))
 
     # print("primary_path for FE: ")
     # print(primary_path)
@@ -174,13 +174,23 @@ def main():
                     agent.point -= 10
                 RESULT.append((cell[0], act, agent.point, cell[2], cell[3], map_index))
     # RESULT.append(((0, 0), "Climb", agent.current_hp, agent.healing_potion))
-    print("RESULT: ")
-    for cell in RESULT:
-        print(cell)
+    # print("RESULT: ")
+    # for cell in RESULT:
+    #     print(cell)
     # for all_cells in program.MAPS:
     #     for row_cell in all_cells:
     #         for cell in row_cell:
-    #             print(cell.element, end=" ")
+    #             print(
+    #                 "[",
+    #                 cell.element,
+    #                 "T" if cell.is_stench else "F",
+    #                 # "T" if cell.is_breeze else "F",
+    #                 # "T" if cell.is_whiff else "F",
+    #                 # "T" if cell.is_glow else "F",
+    #                 # "T" if cell.is_scream else "F",
+    #                 "]",
+    #                 end=" ",
+    #             )
     #         print()
     #     print("--------------------------------")
     # print(len(program.MAPS))
@@ -194,8 +204,13 @@ def main():
     #     for cell in row:
     #         print(cell, end=" ")
     #     print()
-
-    main_ui.showAgentMove(choose_map_result, map, RESULT)
+    # print(len(program.MAPS))
+    # print(len(primary_path))
+    # print(primary_path[0])
+    # print(RESULT[0])
+    # print(program.MAPS[0][0][0].element)
+    maps = copy.deepcopy(program.MAPS)
+    main_ui.showAgentMove(choose_map_result, RESULT, maps, choose_map_result)
 
 
 if __name__ == "__main__":
