@@ -15,9 +15,9 @@ def showWumpusWorld(choose_map_result, map):
     print(choose_map_result)
     
     M1 = Map(screen, map)
-    showGameBackground(screen)
+    showGameBackground(screen, level=choose_map_result)
     M1.showUnknownBoard()
-    I1 = Info(screen)
+    I1 = Info(screen, level=choose_map_result)
     I1.showLeftBar(choose_map_result, point=0, HP=100, H_Ps=0)
     I1.showNoti(0)
     pygame.display.update()
@@ -31,8 +31,8 @@ def showWumpusWorld(choose_map_result, map):
                     return
         pygame.display.update()
 
-def showAgentMove(choose_map_result, map, path):
-    I2 = Info(screen)
+def showAgentMove(choose_map_result, map, path, level):
+    I2 = Info(screen, level=level)
     M2 = Map(screen, map)
     # pos-y, pos-x, direction, point, HP, Healing Potion(s)
     # path = [

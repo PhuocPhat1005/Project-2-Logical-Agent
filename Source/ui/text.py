@@ -37,14 +37,15 @@ class Text_Display:
         
 
 class Info(Text_Display):
-    def __init__(self, screen):
+    def __init__(self, screen, level):
         super().__init__()
         self.screen = screen
         self.left_margin = 850
+        self.level_background = level
     
     def reShowLeftBar(self):
         area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
-        showGameBackground(self.screen, area)
+        showGameBackground(self.screen, area, self.level_background)
     
     def showMapInfo(self, choose_map_result):
         self.write_text_content(f"Map 0{choose_map_result+1}", self.left_margin, 50)
@@ -56,7 +57,7 @@ class Info(Text_Display):
         self.write_text_content(f"Healing Potion(s): {H_Ps}", self.left_margin, 500)
     def showLeftBar(self, choose_map_result, point=10000, HP=100, H_Ps=0):
         area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
-        showGameBackground(self.screen, area)
+        showGameBackground(self.screen, area, self.level_background)
         self.showMapInfo(choose_map_result)
         self.showPoint(point)
         self.showHP(HP)
@@ -64,7 +65,7 @@ class Info(Text_Display):
     
     def showNoti(self, noti):
         area = (BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT, WINDOW_WIDTH-BOARD_APPEEAR_WIDTH, WINDOW_HEIGHT - SHOW_NOTI_HEIGHT)
-        showGameBackground(self.screen, area)
+        showGameBackground(self.screen, area, self.level_background)
         if noti == 0:
             self.write_text_content(f"Press Enter to run the problem.", BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT)
         elif noti == 1:

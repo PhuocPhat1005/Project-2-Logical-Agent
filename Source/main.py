@@ -181,7 +181,7 @@ def main():
     #         print(cell, end=" ")
     #     print()
     
-    main_ui.showAgentMove(choose_map_result, map, RESULT)
+    main_ui.showAgentMove(choose_map_result, map, RESULT, choose_map_result)
 if __name__ == "__main__":
     while True:
         main()

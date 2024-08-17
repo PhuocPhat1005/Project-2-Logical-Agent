@@ -30,7 +30,7 @@ class BackButton:
         return current
     
 class NextButton:
-    def __init__(self, screen, btn_pos_x=1150, btn_pos_y=SHOW_NOTI_HEIGHT, content='next -->'):
+    def __init__(self, screen, btn_pos_x=1180, btn_pos_y=SHOW_NOTI_HEIGHT, content='next -->'):
         self.screen = screen
         self.is_click_next = False
         self.next_btn_sprite = None
