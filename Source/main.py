@@ -129,10 +129,12 @@ def main():
         if path_with_info != []:
             primary_path.append((path_with_info))
             
-    path_with_info = []
-    path_with_info.append(((0, 0), ["Climb"], primary_path[-1][-1][2], primary_path[-1][-1][3]))
-    primary_path.append((path_with_info))
+    if primary_path[-1][-1][0] == (0, 1) or primary_path[-1][-1][0] == (1, 0):
+        path_with_info = []
+        path_with_info.append(((0, 0), ["Climb"], primary_path[-1][-1][2], primary_path[-1][-1][3]))
+        primary_path.append((path_with_info))
     
+
     # print("primary_path for FE: ")
     # print(primary_path)
     agent.point = 10000
@@ -196,7 +198,7 @@ def main():
     # print(RESULT[0])
     # print(program.MAPS[0][0][0].element)
     maps = copy.deepcopy(program.MAPS)
-    main_ui.showAgentMove(choose_map_result, map, RESULT, maps)
+    main_ui.showAgentMove(choose_map_result, RESULT, maps, choose_map_result)
 if __name__ == "__main__":
     while True:
         main()

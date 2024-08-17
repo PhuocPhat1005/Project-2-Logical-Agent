@@ -3,10 +3,10 @@ from pygame.locals import *
 from ui.constants import *
 from ui.text import *
 
-def showGameBackground(screen, area=None):
+def showGameBackground(screen, area=None, level=1):
     #https://wallpapercave.com/w/wp7326071
     #area: (pos_x, pos_y, width, height)
-    background = pygame.image.load(f'ui/assets/game_background.jpg')
+    background = pygame.image.load(f'ui/assets/game_background_{level % 5}.jpg')
     background = pygame.transform.scale(background, (WINDOW_WIDTH, WINDOW_HEIGHT))
     if area == None:
         screen.blit(background, (0, 0))

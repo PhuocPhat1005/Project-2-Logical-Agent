@@ -12,10 +12,10 @@ title = pygame.display.set_caption('Logical Agent - Wumpus World')
 
 def showWumpusWorld(choose_map_result, map):
     M1 = Map(screen, map)
-    showGameBackground(screen)
+    showGameBackground(screen, level=choose_map_result)
     M1.showUnknownBoard()
-    I1 = Info(screen)
-    I1.showLeftBar(choose_map_result, point=10000, HP=100, H_Ps=0)
+    I1 = Info(screen, level=choose_map_result)
+    I1.showLeftBar(choose_map_result, point=0, HP=100, H_Ps=0)
     I1.showNoti(0)
     pygame.display.update()
     while True:
@@ -28,14 +28,26 @@ def showWumpusWorld(choose_map_result, map):
                     return
         pygame.display.update()
 
-def showAgentMove(choose_map_result, map, path, m):
-    I2 = Info(screen)
-    # (pos-y, pos-x), direction, point, HP, Healing Potion(s)
+def showAgentMove(choose_map_result, path, m, level):
+    I2 = Info(screen, level=level)
+    # pos-y, pos-x, direction, point, HP, Healing Potion(s)
+    # path = [
+    #     (0, 0, 0, 0, 100, 0),
+    #     (1, 0, 0, -10, 100, 0),
+    #     (1, 0, 1, -20, 100, 0),
+    #     (1, 1, 1, -30, 100, 0),
+    #     (1, 1, 1, 4970, 100, 0),
+    #     (1, 1, 2, 4960, 100, 0),
+    #     (1, 1, 3, 4950, 100, 0),
+    #     (1, 0, 3, 4940, 100, 0),
+    #     (1, 0, 2, 4930, 100, 0),
+    #     (0, 0, 2, 4920, 100, 0)
+    # ]
     I2.showNoti(1)
     isMoving = True
     drirection = 1 # mod = 0: right, 1: up, 2: left, 3: down
     time_wait_1 = 200
-    time_wait_2 = 100
+    time_wait_2 = 50
     maps = []
     #[element, stench, breeze, whiff, glow, scream]
     for _ in range(len(m)):
@@ -98,10 +110,13 @@ def showAgentMove(choose_map_result, map, path, m):
                     count_map += 1
                     # M2.deleteHealingPotion(path, _) 
                 if path[_][1] == 'Shoot':# and (_==0 or path[_][0] != path[_-1][0]):
-                    y_shoot, x_shoot = M2.agentShoot(path, _, drirection)
+                    M2.showPath(path[_][0][0], path[_][0][1])
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                     pygame.display.flip()
-                    pygame.time.wait(time_wait_1)
+                    pygame.time.wait(200)
+                    y_shoot, x_shoot = M2.agentShoot(path, _, drirection)
+                    pygame.display.flip()
+                    pygame.time.wait(100)
                     M2.updateMap(maps[count_map])
                     count_map += 1
                 I2.showLeftBar(choose_map_result, path[_][2], path[_][3], path[_][4])
@@ -118,7 +133,7 @@ def showAgentMove(choose_map_result, map, path, m):
             I2.showLeftBar(choose_map_result, path[-1][2], path[-1][3], path[-1][4])
             pygame.display.flip()
             isMoving = False
-        elif len(path) > 0:
+        elif len(path) == 0:
             isMoving = False
             I2.showNoti(4)
             I2.showLeftBar(choose_map_result)
