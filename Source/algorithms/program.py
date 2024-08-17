@@ -40,7 +40,7 @@ class Program:
                 # Split the line by '.' to get rooms, then split each room by ','
                 row = [cell.split(",") for cell in line.split(".")]  # Parse each row
                 self.tmp_map.append(row)  # Append the processed row to the temporary map
-
+        print(self.tmp_map)
         # Initialize cells with positions and elements
         for y in range(self.map_size):
             self.cells.append([])  # Initialize a new row in cells
@@ -48,7 +48,7 @@ class Program:
                 self.cells[y].append(Cell(y, x))  # Create a new Cell object for each position
                 self.cells[y][x].element = self.tmp_map[y][x]  # Assign elements from the temporary map
 
-        self.init_map_info()  # Update the map with stench, breeze, whiff, and glow
+        self.init_map_info()  # Update the map with stench, breeze, whiff, glow and scream
         
     def reset_percepts(self, y, x):
         self.add_to_adjacent(y, x, "Reset")
@@ -175,6 +175,32 @@ class Program:
                 )
             print()  # Move to the next line after each row
 
+    def return_map_test(self):
+        """
+        Return the map with all information for testing purposes.
+        """
+        #print("Type: [element, stench, breeze, whiff, glow, scream]")  # Header for map display
+        # Iterate through each row in the map
+        map = []
+        for y in range(self.map_size):
+            map.append([])  # Initialize a new row in cells
+            for x in range(self.map_size):
+                #map[y].append(Cell(y, x))
+                map[y].append([])
+                map[y][x].append(self.get_cell_info(y, x))
+                #map[y][x][0] = self.get_cell_info(y, x)  # Assign elements from the temporary map
+        print(map)
+        for i in range(self.map_size):
+            for j in range(self.map_size):
+                cell = self.cells[i][j]  # Get the cell at the current position
+                # Display the cell's elements and effects
+                map[i][j].append(True if cell.is_stench else False)
+                map[i][j].append(True if cell.is_breeze else False)
+                map[i][j].append(True if cell.is_whiff else False)
+                map[i][j].append(True if cell.is_glow else False)
+                map[i][j].append(True if cell.is_scream else False)
+        return map
+    
     def get_cell_info(self, y, x):
         return self.tmp_map[y][x]
 

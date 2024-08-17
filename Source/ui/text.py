@@ -1,6 +1,6 @@
 import pygame
-from constants import *
-from image import showGameBackground
+from ui.constants import *
+from ui.image import showGameBackground
 
 # https://www.geeksforgeeks.org/python-display-text-to-pygame-window/
 
@@ -40,7 +40,7 @@ class Info(Text_Display):
     def __init__(self, screen):
         super().__init__()
         self.screen = screen
-        self.left_margin = 900
+        self.left_margin = 850
     
     def reShowLeftBar(self):
         area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
@@ -48,16 +48,19 @@ class Info(Text_Display):
     
     def showMapInfo(self, choose_map_result):
         self.write_text_content(f"Map 0{choose_map_result+1}", self.left_margin, 50)
-    def showPoint(self, point=0):
+    def showPoint(self, point=10000):
         self.write_text_content(f"Point: {point}", self.left_margin, 200)
     def showHP(self, HP=100):
         self.write_text_content(f"HP: {HP}%", self.left_margin, 350)
-    def showLeftBar(self, choose_map_result, point=0, HP=100):
+    def showHealingPotion(self, H_Ps=0):
+        self.write_text_content(f"Healing Potion(s): {H_Ps}", self.left_margin, 500)
+    def showLeftBar(self, choose_map_result, point=10000, HP=100, H_Ps=0):
         area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), WINDOW_HEIGHT)
         showGameBackground(self.screen, area)
         self.showMapInfo(choose_map_result)
         self.showPoint(point)
         self.showHP(HP)
+        self.showHealingPotion(H_Ps)
     
     def showNoti(self, noti):
         area = (BOARD_APPEEAR_WIDTH, SHOW_NOTI_HEIGHT, WINDOW_WIDTH-BOARD_APPEEAR_WIDTH, WINDOW_HEIGHT - SHOW_NOTI_HEIGHT)

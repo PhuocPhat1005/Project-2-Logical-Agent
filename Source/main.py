@@ -2,10 +2,20 @@ from algorithms.program import Program
 from algorithms.agent import Agent
 from algorithms.a_star import create_graph, a_star
 import copy
+from ui import main_ui
 
 
 def main():
-    program = Program(file_path="input/map4.txt")
+    choose_map_result = main_ui.showMenu() + 1
+    file_path = f"input/map{choose_map_result}.txt"
+    program = Program(file_path)
+    ma = program.return_map_test()
+    map = copy.deepcopy(ma)
+    print("_________________________")
+    for i in range(len(map)):
+        for j in range(len(map[i])):
+            print(map[i][j], end=" ")
+        print()
     program.MAPS.append(copy.deepcopy(program.cells))
     agent = Agent(map_size=program.map_size)
     # program.display_map_test()
@@ -44,6 +54,7 @@ def main():
     tmp_poition = 0
     tmp_hp = 100
     primary_path = []
+    main_ui.showWumpusWorld(choose_map_result, map)
     for i in range(len(agent.path) - 1):
         path_with_info = []
         current = agent.path[i]
@@ -166,7 +177,6 @@ def main():
     print("RESULT: ")
     for cell in RESULT:
         print(cell)
-
     # for all_cells in program.MAPS:
     #     for row_cell in all_cells:
     #         for cell in row_cell:
@@ -185,6 +195,9 @@ def main():
     #         print(cell, end=" ")
     #     print()
 
+    main_ui.showAgentMove(choose_map_result, map, RESULT)
+
 
 if __name__ == "__main__":
-    main()
+    while True:
+        main()
