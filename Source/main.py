@@ -136,6 +136,9 @@ def main():
 
     # print("primary_path for FE: ")
     # print(primary_path)
+    # for path in primary_path:
+    #     for cell in path:
+    #         print(cell)
     agent.point = 10000
     RESULT = []
     map_index = 0
