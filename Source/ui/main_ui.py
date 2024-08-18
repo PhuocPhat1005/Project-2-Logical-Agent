@@ -141,6 +141,7 @@ def showAgentMove(choose_map_result, path, m, level):
             elif path[-1][1] != 'Climb':
                 I2.showNoti(4)
                 M2.showPath(path[-1][0][0], path[-1][0][1])
+                M2.showDie(path[_][0][0], path[_][0][1], M2.returnH())
             I2.showLeftBar(choose_map_result, path[-1][2], path[-1][3], path[-1][4])
             pygame.display.flip()
             isMoving = False
