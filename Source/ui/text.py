@@ -48,7 +48,9 @@ class Info(Text_Display):
         showGameBackground(self.screen, area, self.level_background)
     
     def showMapInfo(self, choose_map_result):
-        self.write_text_content(f"Map 0{choose_map_result}", self.left_margin, 50)
+        level_str = '0' + str(choose_map_result) if len(str(choose_map_result)) == 1 else str(choose_map_result)
+        map_title = f"Map {level_str}"
+        self.write_text_content(map_title, self.left_margin, 50)
     
     def showPoint(self, point=10000, is_gold=False):
         self.write_text_content("Point:", self.left_margin, 200)
