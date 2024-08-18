@@ -11,4 +11,3 @@ class Cell:
         self.is_glow = False
         self.is_scream = False
         self.is_safe = False
-        # self.kill_wumpus = False

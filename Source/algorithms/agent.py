@@ -64,9 +64,9 @@ class Agent:
         return True
 
     def check_have_pit(self, y, x, cell):
-        if (y, x) == (0, 0):
+        if (y, x) == (0, 0):  # no pit
             return False
-        if not cell.is_breeze or (y, x) in self.path:
+        if not cell.is_breeze or (y, x) in self.path:  # safe, cell -> now, y, x -> next
             return False
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
         for dy, dx in directions:
@@ -267,17 +267,19 @@ class Agent:
                 cell[0], cell[1], program.cells[self.y][self.x]
             ):
                 continue
-            y, x = self.go_to_shoot(i, program)
+            y, x = self.go_to_shoot(i, program)  # o chuan bi ban
             flag = True
             while flag:
                 self.shoot_act.append(((y, x), cell))
                 new_map = self.shoot(cell[0], cell[1], program)
                 program.MAPS.append(copy.deepcopy(new_map))
 
-                if not program.cells[y][x].is_scream:
+                if not program.cells[y][x].is_scream:  # check -> ban het scream -> stop
                     flag = False
 
-                program.reset_percepts(cell[0], cell[1])
+                program.reset_percepts(
+                    cell[0], cell[1]
+                )  # xoa stench , scream / co 2 con wumpus trong hai o cach nhau -> chet 1 con thi sai
                 for dy, dx in direction:
                     ny, nx = cell[0] + dy, cell[1] + dx
                     if 0 <= ny <= self.map_size - 1 and 0 <= nx <= self.map_size - 1:
@@ -305,8 +307,8 @@ class Agent:
             #             pass
 
             self.y = cell[0]
-            self.x = cell[1]
-            graph[self.y][self.x] = 1
-            self.dfs(program)
+            self.x = cell[1]  # dc di vao o do
+            graph[self.y][self.x] = 1  # ban xong -> reset 1 -> dc vao
+            self.dfs(program)  # dfs -> path change
             for cell in self.path:
-                graph[cell[0]][cell[1]] = 1
+                graph[cell[0]][cell[1]] = 1  # o trong map
