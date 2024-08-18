@@ -29,28 +29,18 @@ def showWumpusWorld(choose_map_result, map):
         pygame.display.update()
 
 def showAgentMove(choose_map_result, path, m, level):
+    # path: (pos-y, pos-x), action, point, HP, Healing Potion(s)
+    # maps: element, stench, breeze, whiff, glow, scream
+    # element in maps: 'W', 'P', 'G', '-'
     I2 = Info(screen, level=level)
-    # pos-y, pos-x, direction, point, HP, Healing Potion(s)
-    # path = [
-    #     (0, 0, 0, 0, 100, 0),
-    #     (1, 0, 0, -10, 100, 0),
-    #     (1, 0, 1, -20, 100, 0),
-    #     (1, 1, 1, -30, 100, 0),
-    #     (1, 1, 1, 4970, 100, 0),
-    #     (1, 1, 2, 4960, 100, 0),
-    #     (1, 1, 3, 4950, 100, 0),
-    #     (1, 0, 3, 4940, 100, 0),
-    #     (1, 0, 2, 4930, 100, 0),
-    #     (0, 0, 2, 4920, 100, 0)
-    # ]
     I2.showNoti(1)
     isMoving = True
     drirection = 1 # mod = 0: right, 1: up, 2: left, 3: down
     time_wait_1 = 50
-    time_wait_2 = 200
-    time_wait_3 = 500
+    time_wait_2 = 100
+    time_wait_3 = 300
+    time_wait_4 = 1200
     maps = []
-    #[element, stench, breeze, whiff, glow, scream]
     for _ in range(len(m)):
         maps.append([])
         for y in range(len(m[_])):
@@ -96,35 +86,50 @@ def showAgentMove(choose_map_result, path, m, level):
                     M2.showPath(path[_][0][0], path[_][0][1])
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                     M2.showGold(path[_][0][0], path[_][0][1], M2.returnH())
+                    # I2.showPoint(path[_][2], is_gold=True)
                     pygame.display.flip()
-                    pygame.time.wait(time_wait_3)
+                    pygame.time.wait(time_wait_4)
                     M2.updateMap(maps[count_map])
                     count_map += 1
-                    # M2.deleteGold(path, _)
                 if path[_][1] == 'Grab Heal':
                     M2.showPath(path[_][0][0], path[_][0][1])
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
                     M2.showHealingPotion(path[_][0][0], path[_][0][1], M2.returnH())
                     pygame.display.flip()
-                    pygame.time.wait(time_wait_3)
+                    pygame.time.wait(time_wait_4)
                     M2.updateMap(maps[count_map])
                     count_map += 1
-                    # M2.deleteHealingPotion(path, _)
                 for __ in range(_+1):
                     M2.showPath(path[__][0][0], path[__][0][1])
                 M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
-                if path[_][1] == 'Shoot':# and (_==0 or path[_][0] != path[_-1][0]):
+                if path[_][1] == 'Shoot':
                     M2.showPath(path[_][0][0], path[_][0][1])
                     M2.showAgent(path[_][0][0], path[_][0][1], M2.returnH())
-                    pygame.display.flip()
-                    pygame.time.wait(time_wait_1)
                     y_shoot, x_shoot = M2.agentShoot(path, _, drirection)
-                    pygame.display.flip()
-                    pygame.time.wait(time_wait_3)
+                    if M2.map_data[path[_][0][0]][path[_][0][1]][5]:
+                        M2.showScream(path[_][0][0], path[_][0][1], M2.returnH())
+                        pygame.display.flip()
+                        pygame.time.wait(time_wait_4)
+                    else:
+                        pygame.display.flip()
+                        pygame.time.wait(time_wait_3)
                     M2.updateMap(maps[count_map])
                     count_map += 1
                 if _ > 0 and path[_][1] != 'Shoot' and path[_-1][1] == 'Shoot':
                     M2.showUnknown(y_shoot, x_shoot, M2.returnH())
+                # if _ > 0 or (_ == 0 and path[0][3] < 100):
+                #     if path[_][3] > path[_-1][3]:
+                #         I2.showHP(path[_-1][3], is_heal=True)
+                #         pygame.display.flip()
+                #         pygame.time.wait(time_wait_4)
+                #     elif path[_][3] < path[_-1][3]:
+                #         I2.showHP(path[_-1][3], is_damaged=True)
+                #         pygame.display.flip()
+                #         pygame.time.wait(time_wait_4)
+                #     elif _ == 0 and path[0][3] < 100:
+                #         I2.showHP(path[_][3], is_damaged=True)
+                #         pygame.display.flip()
+                #         pygame.time.wait(time_wait_4)
                 I2.showLeftBar(choose_map_result, path[_][2], path[_][3], path[_][4])
                 pygame.display.flip()
                 pygame.time.wait(time_wait_1)
@@ -136,6 +141,7 @@ def showAgentMove(choose_map_result, path, m, level):
             elif path[-1][1] != 'Climb':
                 I2.showNoti(4)
                 M2.showPath(path[-1][0][0], path[-1][0][1])
+                M2.showDie(path[_][0][0], path[_][0][1], M2.returnH())
             I2.showLeftBar(choose_map_result, path[-1][2], path[-1][3], path[-1][4])
             pygame.display.flip()
             isMoving = False
@@ -226,20 +232,3 @@ def showMenu():
 # [ ['-'] False False False False ] [ ['G'] True True False False ] [ ['P'] False False False False ] [ ['-'] False True False False ]
 # [ ['-'] False False False False ] [ ['-'] False False False False ] [ ['-'] False True False False ] [ ['-'] False True False False ]
 # [ ['-'] False False False False ] [ ['-'] False False False False ] [ ['-'] False True False False ] [ ['P'] False False False False ]
-def mainUI():
-    choose_map_result = showMenu()
-    map = [ [ [ ['A'], True, False, False, False ], [ ['W', 'G'], False, False, False, False ], [ ['-'], True, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['G'], True, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['G'], True, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['G'], True, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ],
-            [ [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['P'], False, False, False, False ], [ ['-'], False, True, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ], [ ['-'], False, False, False, False ] ] ]
-    showWumpusWorld(choose_map_result, map)
-    #showAgentMove(choose_map_result, map)
-
-# while True:
-#     mainUI()

@@ -31,6 +31,9 @@ class ImageElement:
         #https://www.clipartmax.com/download/m2i8A0H7b1Z5d3Z5_miner-miner-png/
         self.agent_img = pygame.image.load('ui/assets/agent.png')
         self.agent_img = pygame.transform.scale(self.agent_img, self.cell_size)
+        #https://www.pngwing.com/en/free-png-yeezt
+        self.die_img = pygame.image.load('ui/assets/dies.png')
+        self.die_img = pygame.transform.scale(self.die_img, self.cell_size)
         #https://pngtree.com/freepng/vector-of-png-bow-arrow_7258676.html
         self.shoot_img = pygame.image.load('ui/assets/shoot.png')
         self.shoot_img = pygame.transform.scale(self.shoot_img, self.cell_size)
@@ -72,6 +75,8 @@ class ImageElement:
         self.screen.blit(self.unknown_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     def showAgent(self, i, j, h):
         self.screen.blit(self.agent_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
+    def showDie(self, i, j, h):
+        self.screen.blit(self.die_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     def showShoot(self, i, j, h):
         self.screen.blit(self.shoot_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     def showGold(self, i, j, h):

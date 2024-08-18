@@ -49,12 +49,27 @@ class Info(Text_Display):
     
     def showMapInfo(self, choose_map_result):
         self.write_text_content(f"Map 0{choose_map_result}", self.left_margin, 50)
-    def showPoint(self, point=10000):
-        self.write_text_content(f"Point: {point}", self.left_margin, 200)
-    def showHP(self, HP=100):
-        self.write_text_content(f"HP: {HP}", self.left_margin, 350)
+    
+    def showPoint(self, point=10000, is_gold=False):
+        self.write_text_content("Point:", self.left_margin, 200)
+        if is_gold:
+            self.write_text_content(f"+5000", self.left_margin+155, 250, text_color=YELLOW_COLOR)
+        else:
+            self.write_text_content(f"{point}", self.left_margin+155, 200)
+    
+    def showHP(self, HP=100, is_heal=False, is_damaged=False):
+        self.write_text_content("HP:", self.left_margin, 350)
+        if is_heal:
+            self.write_text_content(f"+25", self.left_margin+90, 400, text_color=RED_COLOR)
+        if is_damaged:
+            self.write_text_content(f"-25", self.left_margin+90, 400, text_color=GREEN_COLOR)
+        else:
+            self.write_text_content(f"{HP}", self.left_margin+90, 350)
+    
     def showHealingPotion(self, H_Ps=0):
-        self.write_text_content(f"Healing Potion(s): {H_Ps}", self.left_margin, 500)
+        self.write_text_content("Healing Potion(s):", self.left_margin, 500)
+        self.write_text_content(f"{H_Ps}", self.left_margin+455, 500)
+    
     def showLeftBar(self, choose_map_result, point=10000, HP=100, H_Ps=0):
         area = (self.left_margin-20, 0, WINDOW_WIDTH-(self.left_margin-20), SHOW_NOTI_HEIGHT)
         showGameBackground(self.screen, area, self.level_background)
