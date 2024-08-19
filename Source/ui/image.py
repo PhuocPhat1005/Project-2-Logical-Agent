@@ -20,6 +20,29 @@ def showMenuBackground(screen):
     screen.blit(background, (0, 0))
 
 class ImageElement:
+    """
+    This class is used to show images on the screen.
+
+    Attributes:
+        screen: The window screen to show the images on.
+        cell_side (int): The side length of each cell.
+        cell_size tuple (int, int): The size of each cell.
+        empty_img (image): The image of an empty cell (cell that contains nothing).
+        unknown_img (image): The image of a cell which has not been visited.
+        agent_img (image): The image of the agent.
+        die_img (image): The image of the agent when he dies.
+        shoot_img (image): The image of the arrow when the agent shoots.
+        gold_img (image): The image of the gold chest.
+        wumpus_img (image): The image of the Wumpus.
+        stench_img (image): The image of the stench surrounding a Wumpus.
+        scream_img (image): The image of the scream sound when the Wumpus dies.
+        pit_img (image): The image of the pit.
+        breeze_img (image): The image of the breeze surrounding a pit.
+        poisonous_gas_img (image): The image of the poisonous gas.
+        whiff_img (image): The image of the whiff surrounding the poisonous gas.
+        healing_potion_img (image): The image of the healing potion.
+        glow_img (image): The image of the glow surrounding the healing potion.
+    """
     def __init__(self, screen, cell_side=60):
         self.screen = screen
         self.cell_side = cell_side
@@ -104,6 +127,7 @@ class ImageElement:
     def showBreeze(self, i, j, h):
         self.screen.blit(self.breeze_img, (BOARD_APPEEAR_WIDTH + j*self.cell_side, BOARD_APPEEAR_HEIGHT + (h - 1 - i)*self.cell_side))
     
+    # turn Agent
     def turnLeft(self, drirection):
         self.agent_img = pygame.transform.rotate(self.agent_img, 90)
         self.shoot_img = pygame.transform.rotate(self.shoot_img, 90)
@@ -114,6 +138,19 @@ class ImageElement:
         return drirection-1
 
 class Map(ImageElement):
+    """
+    This class is used to show the game map on the screen.
+
+    Attributes:
+        screen: The window screen to show the images on.
+        map_data (2D list): The data of the game map.
+            1 item of map_data is a list of 6 elements:
+            [element, stench, breeze, whiff, glow, scream]
+            [string, bool, bool, bool, bool, bool]
+        cell_side (int): The side length of each cell.
+        h (int): The height of the game map.
+        w (int): The width of the game map.
+    """
     def __init__(self, screen, map_data, cell_side=65):
         # Read and store map data
         self.map_data = copy.deepcopy(map_data)
@@ -127,9 +164,6 @@ class Map(ImageElement):
         else:
             cell_side = 20
         super().__init__(screen, cell_side)
-    
-    def returnH(self):
-        return self.h
     
     def updateMap(self, map_data):
         self.map_data = copy.deepcopy(map_data)
@@ -153,168 +187,24 @@ class Map(ImageElement):
         elif drirection % 4 == 3:
             self.showShoot(y-1, x, self.h)
             return y-1, x
-    def deleteGold(self, path, now):
-        y =  path[now][0][0]
-        x =  path[now][0][1]
-        self.map_data[y][x][0].remove('G')
-        # for _ in range(now+1):
-        #     self.showPath(path[_][0][0], path[_][0][1])
     
-    def deleteWumpus(self, path, now):
-        y =  path[now][0][0]
-        x =  path[now][0][1]
-        self.map_data[y][x][0].remove('W')
-        if y > 0:
-            if y-1 > 0 and 'W' in self.map_data[y-2][x][0]:
-                pass
-            elif x-1 > 0 and 'W' in self.map_data[y-1][x-1][0]:
-                pass
-            elif x+1 < self.w-1 and 'W' in self.map_data[y-1][x+1][0]:
-                pass
-            else:
-                self.map_data[y-1][x][1] = False
-                self.map_data[y-1][x][5] = True
-        if y < self.h-1:
-            if y+1 < self.h-1 and 'W' in self.map_data[y+1][x][0]:
-                pass
-            elif x-1 > 0 and 'W' in self.map_data[y+1][x-1][0]:
-                pass
-            elif x+1 < self.w-1 and 'W' in self.map_data[y+1][x+1][0]:
-                pass
-            else:
-                self.map_data[y+1][x][1] = False
-                self.map_data[y+1][x][5] = True
-        if x > 0:
-            if x-1 > 0 and 'W' in self.map_data[y][x-2][0]:
-                pass
-            elif y-1 > 0 and 'W' in self.map_data[y-1][x-1][0]:
-                pass
-            elif y+1 < self.h-1 and 'W' in self.map_data[y+1][x-1][0]:
-                pass
-            else:
-                self.map_data[y][x-1][1] = False
-                self.map_data[y][x-1][5] = True
-        if x < self.w-1:
-            if x-1 > 0 and 'W' in self.map_data[y][x-2][0]:
-                pass
-            elif y-1 > 0 and 'W' in self.map_data[y-1][x-1][0]:
-                pass
-            elif y+1 < self.h-1 and 'W' in self.map_data[y+1][x-1][0]:
-                pass
-            else:
-                self.map_data[y][x+1][1] = False
-                self.map_data[y][x+1][5] = True
-        for _ in range(now+1):
-            self.showPath(path[_][0][0], path[_][0][1])
-    
-    def deleteHealingPotion(self, path, now):
-        y =  path[now][0][0]
-        x =  path[now][0][1]
-        self.map_data[y][x][0].remove('H_P')
-        if y > 0:
-            if y-1 > 0 and 'H_P' in self.map_data[y-2][x][0]:
-                pass
-            elif x-1 > 0 and 'H_P' in self.map_data[y-1][x-1][0]:
-                pass
-            elif x+1 < self.w-1 and 'H_P' in self.map_data[y-1][x+1][0]:
-                pass
-            else:
-                self.map_data[y-1][x][4] = False
-        if y < self.h-1:
-            if y+1 < self.h-1 and 'H_P' in self.map_data[y+1][x][0]:
-                pass
-            elif x-1 > 0 and 'H_P' in self.map_data[y+1][x-1][0]:
-                pass
-            elif x+1 < self.w-1 and 'H_P' in self.map_data[y+1][x+1][0]:
-                pass
-            else:
-                self.map_data[y+1][x][4] = False
-        if x > 0:
-            if x-1 > 0 and 'H_P' in self.map_data[y][x-2][0]:
-                pass
-            elif y-1 > 0 and 'H_P' in self.map_data[y-1][x-1][0]:
-                pass
-            elif y+1 < self.h-1 and 'H_P' in self.map_data[y+1][x-1][0]:
-                pass
-            else:
-                self.map_data[y][x-1][4] = False
-        if x < self.w-1:
-            if x+1 < self.w-1 and 'H_P' in self.map_data[y][x+1][0]:
-                pass
-            elif y-1 > 0 and 'H_P' in self.map_data[y-1][x-1][0]:
-                pass
-            elif y+1 < self.h-1 and 'H_P' in self.map_data[y+1][x-1][0]:
-                pass
-            else:
-                self.map_data[y][x+1][4] = False
-        for _ in range(now+1):
-            self.showPath(path[_][0][0], path[_][0][1])
-    
-    def showUnknownBoard(self): # Show game board
+    def showUnknownBoard(self): # Show game map with unvisitted cells
         y = 0
         x = 0
         for y in range (0, self.h):
             for x in range (0, self.w):
                 self.showUnknown(y, x, self.h)
     
-    def showKnownBoard(self): # Show game board
+    def showKnownBoard(self): # Show game map with visitted cells
         y = 0
         x = 0
-        #[element, stench, breeze, whiff, glow]
+        #[element, stench, breeze, whiff, glow, scream]
         for y in range (0, self.h):
             for x in range (0, self.w):
-                self.showEmpty(y, x, self.h)
-                if 'A' in self.map_data[y][x][0]:
-                    self.showAgent(y, x, self.h)
-                if 'G' in self.map_data[y][x][0]:
-                    self.showGold(y, x, self.h)
-                if 'W' in self.map_data[y][x][0]:
-                    self.showWumpus(y, x, self.h)
-                if 'P' in self.map_data[y][x][0]:
-                    self.showPit(y, x, self.h)
-                if 'P_G' in self.map_data[y][x][0]:
-                    self.showPoisonousGas(y, x, self.h)
-                if 'H_P' in self.map_data[y][x][0]:
-                    self.showHealingPotion(y, x, self.h)
-                
-                if self.map_data[y][x][1]:
-                    self.showStench(y, x, self.h)
-                if self.map_data[y][x][2]:
-                    self.showBreeze(y, x, self.h)
-                if self.map_data[y][x][3]:
-                    self.showWhiff(y, x, self.h)
-                if self.map_data[y][x][4]:
-                    self.showGlow(y, x, self.h)
+                self.showPath(y, x)
     
-    def showPath(self, y, x): # Show agent move
-        # y = 0
-        # x = 0
-        # #[element, stench, breeze, whiff, glow]
-        # for y in range (0, self.h):
-        #     for x in range (0, self.w):
-        #         self.showEmpty(y, x, self.h)
-        #         if 'A' in self.map_data[y][x][0]:
-        #             self.showAgent(y, x, self.h)
-        #         if 'G' in self.map_data[y][x][0]:
-        #             self.showGold(y, x, self.h)
-        #         if 'W' in self.map_data[y][x][0]:
-        #             self.showWumpus(y, x, self.h)
-        #         if 'P' in self.map_data[y][x][0]:
-        #             self.showPit(y, x, self.h)
-        #         if 'P_G' in self.map_data[y][x][0]:
-        #             self.showPoisonousGas(y, x, self.h)
-        #         if 'H_P' in self.map_data[y][x][0]:
-        #             self.showHealingPotion(y, x, self.h)
-                
-        #         if self.map_data[y][x][1]:
-        #             self.showStench(y, x, self.h)
-        #         if self.map_data[y][x][2]:
-        #             self.showBreeze(y, x, self.h)
-        #         if self.map_data[y][x][3]:
-        #             self.showWhiff(y, x, self.h)
-        #         if self.map_data[y][x][4]:
-        #             self.showGlow(y, x, self.h)
-        #[element, stench, breeze, whiff, glow]
+    def showPath(self, y, x): # Show visitted cells
+        #[element, stench, breeze, whiff, glow, scream]
         self.showEmpty(y, x, self.h)
         if 'A' in self.map_data[y][x][0]:
             self.showAgent(y, x, self.h)
