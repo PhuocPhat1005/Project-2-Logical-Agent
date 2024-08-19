@@ -152,14 +152,9 @@ class Program:
                     self.cells[ny][nx].is_glow = True
                 elif object_name == "Reset":
                     self.cells[ny][nx].is_stench = False
-                    # self.cells[ny][nx].is_breeze = False
-                    # self.cells[ny][nx].is_whiff = False
-                    # self.cells[ny][nx].is_glow = False
                     self.cells[ny][nx].is_scream = False
                 elif object_name == "Shoot_wumpus":
                     self.cells[ny][nx].is_scream = True
-                # elif object_name == "Kill_wumpus":
-                #     self.cells[ny][nx].kill_wumpus = True
 
     def display_map_test(self):
         """

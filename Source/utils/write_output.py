@@ -9,7 +9,6 @@ def write_output(file_path: str, agent: Agent, RES):
         file_path (str): The path to the output file.
         agent (Agent): The Agent object containing the game state.
     """
-    flag = True
     with open(file_path, "w") as file:
         for cell in RES:
             file.write(f"({cell[0][0] + 1}, {cell[0][1] + 1}) : {cell[1]}\n")

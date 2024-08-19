@@ -7,29 +7,58 @@ from utils.write_output import write_output
 
 
 def main():
+    """
+    Main function for running the Wumpus World game simulation.
+
+    This function initializes the game environment based on the chosen map,
+    sets up the agent, and controls the game loop where the agent explores the map,
+    interacts with elements (like Wumpus, pits, gold, and healing potions), and
+    records its path and actions. The results are then displayed and output to a file.
+
+    The function involves:
+    - Setting up the game environment from a pre-defined map.
+    - Initializing the agent and simulating its decisions and actions.
+    - Managing the agent's interaction with the environment and updating its state.
+    - Outputting the results of the simulation.
+
+    The agent's behavior includes pathfinding using the A* algorithm, shooting the Wumpus,
+    collecting gold, healing potions, and managing its health and score.
+    """
+    # Display the menu to select a map and get the chosen map number
     choose_map_result = main_ui.showMenu() + 1
     file_path = f"input/map{choose_map_result}.txt"
     output_filepath = f"output/result{choose_map_result}.txt"
+    # Initialize the Program with the selected map file
     program = Program(file_path)
+    # Return the initial map and make a deep copy of it
     ma = program.return_map_test()
     map = copy.deepcopy(ma)
+    # Store the initial state of the map
     program.MAPS.append(copy.deepcopy(program.cells))
+    # Initialize the agent with the map size
     agent = Agent(map_size=program.map_size)
+    # Perform a depth-first search to explore the map
     agent.dfs(program)  # 1
 
+    # Process possible Wumpus locations
     for cell in agent.maybe_wumpus:
         if cell not in agent.path and cell not in agent.sure_wumpus:
             agent.sure_wumpus.append(cell)
 
+    # Process possible pit locations
     for cell in agent.maybe_pit:
         if cell not in agent.path and cell not in agent.sure_pit:
             agent.sure_pit.append(cell)
+
+    # Create a graph of the path explored by the agent for Wumpus elimination
     graph1 = create_graph(
         agent.path, agent.map_size
     )  # graph -> o agent di qua -> bieu do -> de tim path toi uu trong A* -> luu w chet
+
+    # Create a graph of the path for general movement and interaction
     graph2 = create_graph(
         agent.path, agent.map_size
-    )  # graph -> ban wwumpus -> update path -> ban dau
+    )  # graph -> ban wumpus -> update path -> ban dau
     agent.shoot_process(program, graph1)  # luu w -> chet
     agent.path.append((0, 0))  # quay ve o (0,0)
     agent.current_hp = 100
