@@ -126,20 +126,32 @@ This assignment will be completed in <font style='color:blue' >**groups**</font>
 ---
 # TEAM'S INFORMATION
 ## 1. Work assignment table
+|  Student ID  |      Full Name      | General Tasks | Detailed Tasks                                                                                               | Completion |
+|:------------:|:-------------------:|:-------------:|:------------------------------------------------------------------------------------------------------------ |:----------:|
+| **22127174** |  **Ngô Văn Khải**   |      GUI      | Implementing the GUI (Coding)                                                                                |   100 %    |
+|              |                     |               | Describe in detail the code of GUI (Report)                                                                  |   100 %    |
+|              |                     |  Test cases   | Describe in detail the test cases (Report)                                                                   |   100 %    |
+| **22127322** |  **Lê Phước Phát**  |  Algorithms   | Describing in detail the algorithms of the problems successfully (Report).                                   |   100 %    |
+|              |                     |  Test cases   | Performance experiments with some reflection and comments (Report)                                           |   100 %    |
+| **22127388** |  **Tô Quốc Thanh**  |  Algorithms   | Implementing the algorithms of the problems (Coding).                                                        |   100 %    |
+|              |                     |  Test cases   | Performance experiments with some reflection and comments (Report)                                           |   100 %    |
+| **22127441** | **Thái Huyễn Tùng** |      GUI      | Video demonstrating                                                                                          |   100 %    |
+|              |                     |               | Game Play (Code + Report)                                                                                    |   100 %    |
+|              |                     |  Test cases   | Generating test cases with some different attributes (position and number of Pit, Gold, and Wumpus) (Report) |   100 %    |
+|              |                     |               | Describe in detail the test cases (Report).                                                                  |   100 %    |
+## 2. Assigment Plan
+<center>
+    <img src = "https://github.com/user-attachments/assets/3126f0d0-2add-4391-b919-5fa53580d759" alt="Figure 2: Assignment Plan"/>
+    <div style="text-align: center;"><b>Figure 2</b>: Assignment Plan.</div>
+</center>
 
-| Student ID | Full Name       |   General Tasks    | Detailed Tasks | Completion |
-|:----------:| --------------- |:------------------:|:--------------:|:----------:|
-|  22127174  | Ngô Văn Khải    |        GUI         |                |   100 %    |
-|  22127322  | Lê Phước Phát   | Problem/Test Cases |                |   100 %    |
-|  22127388  | Tô Quốc Thanh   |      Problem       |                |   100 %    |
-|  22127441  | Thái Huyễn Tùng |        GUI         |                |   100 %    |
 
-## 2. Self-evaluation of the completion rate
-
+## 3. Self-evaluation of the completion rate
 | No. | Details                                                       | Completion Rate |
 |:---:| ------------------------------------------------------------- |:---------------:|
 |  1  | Finish problem successfully                                   |      100 %      |
 |  2  | GUI                                                           |      100 %      |
 |  3  | Generate at least 5 test cases                                |      100 %      |
 |  4  | Report algorithm, experiment with some reflection or comments |      100 %      |
+|  5  | Video demonstrating                                           |      100 %      |
 
