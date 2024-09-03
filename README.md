@@ -177,3 +177,9 @@ python -m venv venv.
 pip install -r requirements.txt
 ```
 * Finally, you need to run the application by executing the command “python main.py” in the console or terminal.
+
+---
+## D. DEMO VIDEO
+<!-- BEGIN YOUTUBE-CARDS -->
+[![Wumpus World Game AI](https://ytcards.demolab.com/?id=LvsKcd263B4&title=Wumpus+World+Game+AI&lang=en&timestamp=LvsKcd263B4&background_color=%230d1117&title_color=%23ffffff&stats_color=%23dedede&max_title_lines=1&width=250&border_radius=5&duration=589 "Wumpus World Game AI")](https://www.youtube.com/watch?v=LvsKcd263B4)
+<!-- END YOUTUBE-CARDS -->
