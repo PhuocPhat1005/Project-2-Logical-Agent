@@ -1,6 +1,9 @@
 _**University of Science (HCMUS) - Introduction to Artificial Intelligence - CSC14003**_
 # PROJECT 2: LOGICAL AGENT
-## 1. Wumpus World
+
+---
+## A. ABOUT PROJECT
+### 1. Wumpus World
 The purpose of this project is to design and implement a <font style='color:blue'>***logical agent***</font> that navigates through the Wumpus World, a <font style='color:blue'>***partially-observable***</font> environment.
 The Wumpus World presents the following key features:
 * The environment is an underground cave with a network of interconnected two-dimensional rooms.
@@ -20,7 +23,7 @@ Figure 1 demonstrates an example of the Wumpus world with key entities.
 </center>
 
 
-## 2. Project Description
+### 2. Project Description
 Our Wumpus World for actual implementation slightly differs from the original problem description. The environment’s specification is as follows.
 1. <font style='color:blue'>**Grid Layout**</font>
 	* The grid size has increased from 4x4 to <font style='color:blue'>**10x10**</font>.
@@ -68,14 +71,14 @@ The following activities can give the agent certain amounts of points.
 | Climb of the cave                       |   +10    |
 | All Agent’s Action                      |   − 10   |
 
-## 3. Tasks
+### 3. Tasks
 Your group must play two roles:
 * **Program**: set up a program to build the map
 * **Agent**: explore the Wumpus world and get the highest score possible for that world, using either Propositional Logic or First-Order Logic (or both).
 
 Your implementation should <font style='color:blue'>*output information about the search*</font>, including the <font style='color:blue'>*percepts at every room the agent enters*</font>, the <font style='color:blue'>*updates in the knowledge base after each new percept*</font>, and the <font style='color:blue'>*action decided upon by the agent*</font>. The program should also <font style='color:blue'>*output the score of the agent*</font>.
 Having your implementation generate worlds randomly can help you test your agent.
-## 4. Specifications
+### 4. Specifications
 You need to create 2 classes Program and Agent in separate files.
 
 <font style='color:red'>**For class Program**</font>: This class is responsible for building the map, and reporting information about the elements in the cell.
@@ -105,7 +108,7 @@ The agent can **only know the components of the cell where it is standing**. The
 You can write output in the following format:
 ![image](https://github.com/user-attachments/assets/73201aef-644f-4748-8f10-605675603e52)
 
-## 5. Requirements
+### 5. Requirements
 | No. | Specifications                                                                                                                  |  Scores   |
 |:---:| ------------------------------------------------------------------------------------------------------------------------------- |:---------:|
 |  1  | Finish problem success                                                                                                          |   50 %    |
@@ -113,7 +116,7 @@ You can write output in the following format:
 |  3  | Generate at least 5 maps with difference structures such as position and number of Pit, Gold and Wumpus.                        |   20 %    |
 |  4  | Report your algorithm, experiment with some reflection or comments.                                                             |   20 %    |
 |     | **Total**                                                                                                                       | **100 %** |
-## 6. Notice
+### 6. Notice
 This assignment will be completed in <font style='color:blue' >**groups**</font>, as registered at the beginning of the course. To prepare, you will need to create a folder that contains various subfolders, including source, input, output, and document. The report must give the following information:
 * Your detailed information (Student Id, Full Name)
 * Assignment Plan
@@ -124,8 +127,8 @@ This assignment will be completed in <font style='color:blue' >**groups**</font>
 <font style='color:red'>**Any plagiarism, tricks, or any lie will have 0 points for the course grade.**</font>
 
 ---
-# TEAM'S INFORMATION
-## 1. Work assignment table
+## B. TEAM'S INFORMATION
+### 1. Work assignment table
 |  Student ID  |      Full Name      | General Tasks | Detailed Tasks                                                                                               | Completion |
 |:------------:|:-------------------:|:-------------:|:------------------------------------------------------------------------------------------------------------ |:----------:|
 | **22127174** |  **Ngô Văn Khải**   |      GUI      | Implementing the GUI (Coding)                                                                                |   100 %    |
@@ -139,14 +142,13 @@ This assignment will be completed in <font style='color:blue' >**groups**</font>
 |              |                     |               | Game Play (Code + Report)                                                                                    |   100 %    |
 |              |                     |  Test cases   | Generating test cases with some different attributes (position and number of Pit, Gold, and Wumpus) (Report) |   100 %    |
 |              |                     |               | Describe in detail the test cases (Report).                                                                  |   100 %    |
-## 2. Assigment Plan
+### 2. Assigment Plan
 <center>
     <img src = "https://github.com/user-attachments/assets/3126f0d0-2add-4391-b919-5fa53580d759" alt="Figure 2: Assignment Plan"/>
     <div style="text-align: center;"><b>Figure 2</b>: Assignment Plan.</div>
 </center>
 
-
-## 3. Self-evaluation of the completion rate
+### 3. Self-evaluation of the completion rate
 | No. | Details                                                       | Completion Rate |
 |:---:| ------------------------------------------------------------- |:---------------:|
 |  1  | Finish problem successfully                                   |      100 %      |
@@ -155,3 +157,23 @@ This assignment will be completed in <font style='color:blue' >**groups**</font>
 |  4  | Report algorithm, experiment with some reflection or comments |      100 %      |
 |  5  | Video demonstrating                                           |      100 %      |
 
+---
+## C. SETTINGS
+### 1. Environmental Requirements
+* **Python version:** 3.10+ with Pygame graphical module.
+* **Operating System:** the command may vary across platforms, so you need to run this program on Windows.
+### 2. Settings
+* Firstly, you need to set up the virtual environment in Python by using this command line below:
+```python!=
+pip install virtualenv
+python -m venv venv.
+```
+* Secondly, you need to activate the virtual environment in Python by using this command line below:
+```python!=
+.venv\Script\activate
+```
+* Thirdly, we will install all libraries in the file “requirements.txt” using this command line below. Note that we need “cd” into the folder “Source”.
+```python!=
+pip install -r requirements.txt
+```
+* Finally, you need to run the application by executing the command “python main.py” in the console or terminal.
