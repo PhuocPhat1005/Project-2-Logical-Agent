@@ -112,7 +112,7 @@ You can write output in the following format:
 | No. | Specifications                                                                                                                  |  Scores   |
 |:---:| ------------------------------------------------------------------------------------------------------------------------------- |:---------:|
 |  1  | Finish problem success                                                                                                          |   50 %    |
-|  2  | Graphical demonstration of each step of the running process. You can demo in console screen or use any other graphical library. |   20 %    |
+|  2  | Graphical demonstration of each step of the running process. You can demo in console screen or use any other graphical library. |   10 %    |
 |  3  | Generate at least 5 maps with difference structures such as position and number of Pit, Gold and Wumpus.                        |   20 %    |
 |  4  | Report your algorithm, experiment with some reflection or comments.                                                             |   20 %    |
 |     | **Total**                                                                                                                       | **100 %** |
